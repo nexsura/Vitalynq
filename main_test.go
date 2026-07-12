@@ -15,11 +15,11 @@ func TestHelpText(t *testing.T) {
 	got := helpText()
 	want := `Vitalynq
 
-	Commandes:
-	help	Affiche cette aide
-	version	Affiche la version
+Commandes:
+  help     Affiche cette aide
+  version  Affiche la version
 
-	Vitalynq organise des données. Il ne pose pas de diagnostic.`
+Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
 	if got != want {
 		t.Fatalf("helpText() = %q, want %q", got, want)

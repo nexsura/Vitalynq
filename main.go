@@ -12,11 +12,11 @@ func appDescription() string {
 func helpText() string {
 	return `Vitalynq
 
-	Commandes:
-	help	Affiche cette aide
-	version	Affiche la version
+Commandes:
+  help     Affiche cette aide
+  version  Affiche la version
 
-	Vitalynq organise des données. Il ne pose pas de diagnostic.`
+Vitalynq organise des données. Il ne pose pas de diagnostic.`
 }
 
 func outputForArgs(args []string) string {
