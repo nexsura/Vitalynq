@@ -15,6 +15,7 @@ func helpText() string {
 Commandes:
   help     Affiche cette aide
   version  Affiche la version
+  about    Affiche le périmètre actuel
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 }
@@ -29,9 +30,23 @@ func outputForArgs(args []string) string {
 		return helpText()
 	case "version":
 		return "Vitalynq 0.1.0-dev"
+	case "about":
+		return aboutText()
 	default:
 		return appDescription()
 	}
+}
+
+func aboutText() string {
+	return `Vitalynq est une application CLI locale pour organiser des données personnelles de santé.
+
+Périmètre actuel:
+	local
+	mono-utilisateur
+	sans cloud
+	sans télémétrie
+
+Vitalynq ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
 }
 
 func main() {
