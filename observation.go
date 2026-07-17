@@ -27,3 +27,17 @@ func validateObservation(observation Observation) error {
 
 	return nil
 }
+
+func newObservation(occuredAt time.Time, text string, source string) (Observation, error) {
+	observation := Observation{
+		OccurredAt: occuredAt,
+		Text:       strings.TrimSpace(text),
+		Source:     strings.TrimSpace(source),
+	}
+
+	if err := validateObservation(observation); err != nil {
+		return Observation{}, err
+	}
+
+	return observation, nil
+}
