@@ -28,9 +28,9 @@ func validateObservation(observation Observation) error {
 	return nil
 }
 
-func newObservation(occuredAt time.Time, text string, source string) (Observation, error) {
+func newObservation(occurredAt time.Time, text string, source string) (Observation, error) {
 	observation := Observation{
-		OccurredAt: occuredAt,
+		OccurredAt: occurredAt,
 		Text:       strings.TrimSpace(text),
 		Source:     strings.TrimSpace(source),
 	}

@@ -76,7 +76,7 @@ func TestValidateObservationRejectsBlankSource(t *testing.T) {
 	}
 }
 
-func TestNewObservationCreateValidObservation(t *testing.T) {
+func TestNewObservationCreatesValidObservation(t *testing.T) {
 	occurredAt := time.Date(2026, 7, 17, 9, 30, 0, 0, time.UTC)
 
 	observation, err := newObservation(occurredAt, " Observation fictive de test ", " saisie manuelle ")
@@ -85,7 +85,7 @@ func TestNewObservationCreateValidObservation(t *testing.T) {
 	}
 
 	if observation.OccurredAt != occurredAt {
-		t.Fatalf("OccurredAt = %v , want %v", observation.OccurredAt, occurredAt)
+		t.Fatalf("OccurredAt = %v, want %v", observation.OccurredAt, occurredAt)
 	}
 
 	if observation.Text != "Observation fictive de test" {
@@ -97,7 +97,7 @@ func TestNewObservationCreateValidObservation(t *testing.T) {
 	}
 }
 
-func TestObservationRejectsInvalidObservation(t *testing.T) {
+func TestNewObservationRejectsInvalidObservation(t *testing.T) {
 	_, err := newObservation(time.Time{}, "Observation fictive de test", "saisie manuelle")
 	if err == nil {
 		t.Fatalf("newObservation() error = nil, want error")
