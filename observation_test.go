@@ -17,7 +17,7 @@ func TestValidateObservationAcceptsValidObservation(t *testing.T) {
 	}
 }
 
-func TestValidateOservationRejectsMissingDate(t *testing.T) {
+func TestValidateObservationRejectsMissingDate(t *testing.T) {
 	observation := Observation{
 		Text:   "Observation fictive de test",
 		Source: "saisie manuelle",
@@ -36,7 +36,7 @@ func TestValidateObservationRejectsEmptyText(t *testing.T) {
 	}
 
 	if err := validateObservation(observation); err == nil {
-		t.Fatalf("validationObservation() error = nil, want error")
+		t.Fatalf("validateObservation() error = nil, want error")
 	}
 }
 
