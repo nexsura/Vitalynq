@@ -95,6 +95,10 @@ func TestNewObservationCreatesValidObservation(t *testing.T) {
 	if observation.Source != "saisie manuelle" {
 		t.Fatalf("Source = %q, want %q", observation.Source, "saisie manuelle")
 	}
+
+	if observation.ID != 0 {
+		t.Fatalf("ID = %d, want 0", observation.ID)
+	}
 }
 
 func TestNewObservationRejectsInvalidObservation(t *testing.T) {

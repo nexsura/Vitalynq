@@ -7,6 +7,7 @@ import (
 )
 
 type Observation struct {
+	ID         int64
 	OccurredAt time.Time
 	Text       string
 	Source     string
