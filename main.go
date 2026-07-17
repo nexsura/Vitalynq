@@ -33,7 +33,7 @@ func outputForArgs(args []string) string {
 	case "about":
 		return aboutText()
 	default:
-		return appDescription()
+		return unknownCommandText(args[1])
 	}
 }
 
@@ -47,6 +47,10 @@ Périmètre actuel:
 	sans télémétrie
 
 Vitalynq ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
+}
+
+func unknownCommandText(command string) string {
+	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
 
 func main() {

@@ -44,6 +44,15 @@ Vitalynq ne pose pas de diagnostic et ne remplace pas un professionnel de santé
 	}
 }
 
+func TestUnknownCommandText(t *testing.T) {
+	got := unknownCommandText("profil")
+	want := "Commande inconnue: profil\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles."
+
+	if got != want {
+		t.Fatalf("unknownCommandText() = %q, want %q", got, want)
+	}
+}
+
 func TestOutputForArgsWithoutCommand(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq"})
 	want := "Vitalynq organise des données de santé locales."
@@ -74,6 +83,15 @@ func TestOutputForArgsVersion(t *testing.T) {
 func TestOutputForArgsAbout(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "about"})
 	want := aboutText()
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsUnknownCommand(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "profil"})
+	want := unknownCommandText("profil")
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
