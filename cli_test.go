@@ -19,6 +19,7 @@ Commandes:
   help     Affiche cette aide
   version  Affiche la version
   about    Affiche le périmètre actuel
+  observations list  Liste les observations
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
@@ -92,6 +93,26 @@ func TestOutputForArgsAbout(t *testing.T) {
 func TestOutputForArgsUnknownCommand(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "profil"}, NewMemoryObservationStore())
 	want := unknownCommandText("profil")
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestObservationsListTextWithoutObservations(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	got := observationsListText(store)
+	want := "Aucune observation enregistrée."
+
+	if got != want {
+		t.Fatalf("observationsListText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsObservationsList(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "observations", "list"}, NewMemoryObservationStore())
+	want := "Aucune observation enregistrée."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
