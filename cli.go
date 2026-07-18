@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func appDescription() string {
@@ -65,5 +66,12 @@ func observationsListText(store ObservationStore) string {
 		return "Aucune observation enregistrée."
 	}
 
-	return "Observations enregistrées."
+	var builder strings.Builder
+	builder.WriteString("Observations:\n")
+
+	for _, observation := range observations {
+		fmt.Fprintf(&builder, "- #%d %s\n", observation.ID, observation.Text)
+	}
+
+	return strings.TrimRight(builder.String(), "\n")
 }

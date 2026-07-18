@@ -118,3 +118,19 @@ func TestOutputForArgsObservationsList(t *testing.T) {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
+
+func TestObservationsListTextWithObservations(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	if _, err := store.Save(validStoreObservation("Observation fictive de test")); err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	got := observationsListText(store)
+	want := `Observations:
+- #1 Observation fictive de test`
+
+	if got != want {
+		t.Fatalf("observationsListText() = %q, want %q", got, want)
+	}
+}
