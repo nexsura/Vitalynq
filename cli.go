@@ -35,7 +35,9 @@ func unknownCommandText(command string) string {
 	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
 
-func outputForArgs(args []string) string {
+func outputForArgs(args []string, store ObservationStore) string {
+	_ = store
+
 	if len(args) <= 1 {
 		return appDescription()
 	}

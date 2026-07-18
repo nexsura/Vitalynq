@@ -6,5 +6,6 @@ import (
 )
 
 func main() {
-	fmt.Println(outputForArgs(os.Args))
+	store := NewMemoryObservationStore()
+	fmt.Println(outputForArgs(os.Args, store))
 }

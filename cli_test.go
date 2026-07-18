@@ -54,7 +54,7 @@ func TestUnknownCommandText(t *testing.T) {
 }
 
 func TestOutputForArgsWithoutCommand(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq"})
+	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore())
 	want := "Vitalynq organise des données de santé locales."
 
 	if got != want {
@@ -63,7 +63,7 @@ func TestOutputForArgsWithoutCommand(t *testing.T) {
 }
 
 func TestOutputForArgsHelp(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "help"})
+	got := outputForArgs([]string{"vitalynq", "help"}, NewMemoryObservationStore())
 	want := helpText()
 
 	if got != want {
@@ -72,7 +72,7 @@ func TestOutputForArgsHelp(t *testing.T) {
 }
 
 func TestOutputForArgsVersion(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "version"})
+	got := outputForArgs([]string{"vitalynq", "version"}, NewMemoryObservationStore())
 	want := "Vitalynq 0.1.0-dev"
 
 	if got != want {
@@ -81,7 +81,7 @@ func TestOutputForArgsVersion(t *testing.T) {
 }
 
 func TestOutputForArgsAbout(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "about"})
+	got := outputForArgs([]string{"vitalynq", "about"}, NewMemoryObservationStore())
 	want := aboutText()
 
 	if got != want {
@@ -90,7 +90,7 @@ func TestOutputForArgsAbout(t *testing.T) {
 }
 
 func TestOutputForArgsUnknownCommand(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "profil"})
+	got := outputForArgs([]string{"vitalynq", "profil"}, NewMemoryObservationStore())
 	want := unknownCommandText("profil")
 
 	if got != want {
