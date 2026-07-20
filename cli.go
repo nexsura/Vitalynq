@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 func appDescription() string {
@@ -17,6 +18,7 @@ Commandes:
   version  Affiche la version
   about    Affiche le périmètre actuel
   observations list  Liste les observations
+  observations add   Ajoute une observation
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 }
@@ -54,6 +56,10 @@ func outputForArgs(args []string, store ObservationStore) string {
 			return observationsListText(store)
 		}
 
+		if len(args) > 3 && args[2] == "add" {
+			return observationsAddText(store, args[3])
+		}
+
 		return unknownCommandText(args[1])
 	default:
 		return unknownCommandText(args[1])
@@ -74,4 +80,18 @@ func observationsListText(store ObservationStore) string {
 	}
 
 	return strings.TrimRight(builder.String(), "\n")
+}
+
+func observationsAddText(store ObservationStore, text string) string {
+	observation, err := newObservation(time.Now().UTC(), text, "saisie manuelle")
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter l'observation: %v", err)
+	}
+
+	saved, err := store.Save(observation)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter l'observation: %v", err)
+	}
+
+	return fmt.Sprintf("Observation #%d ajoutée.", saved.ID)
 }

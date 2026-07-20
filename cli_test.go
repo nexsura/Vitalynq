@@ -20,6 +20,7 @@ Commandes:
   version  Affiche la version
   about    Affiche le périmètre actuel
   observations list  Liste les observations
+  observations add   Ajoute une observation
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
@@ -132,5 +133,36 @@ func TestObservationsListTextWithObservations(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("observationsListText() = %q, want %q", got, want)
+	}
+}
+
+func TestObservationsAddText(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	got := observationsAddText(store, "Observation fictive de test")
+	want := "Observation #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("observationsAddText() = %q, want %q", got, want)
+	}
+
+	observations := store.List()
+	if len(observations) != 1 {
+		t.Fatalf("len(List()) = %d, want 1", len(observations))
+	}
+
+	if observations[0].Text != "Observation fictive de test" {
+		t.Fatalf("Text = %q, want %q", observations[0].Text, "Observation fictive de test")
+	}
+}
+
+func TestOutputForArgsObservationsAdd(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "Observation fictive de test"}, store)
+	want := "Observation #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
