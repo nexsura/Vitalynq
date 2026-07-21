@@ -10,6 +10,18 @@ Elle organise des données. Elle ne pose pas de diagnostic, ne recommande pas de
 go run .
 ```
 
+## Commandes disponibles
+
+```sh
+go run . help
+go run . version
+go run . about
+go run . observations list
+go run . observations add "Observation fictive"
+```
+
+Les observations sont actuellement stockées en mémoire. Elles ne sont pas encore conservées après la fin du programme.
+
 ## Vérification
 
 ```sh
