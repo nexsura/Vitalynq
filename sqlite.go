@@ -23,3 +23,20 @@ func openSQLite(path string) (*sql.DB, error) {
 
 	return db, nil
 }
+
+func initializeSQLiteSchema(db *sql.DB) error {
+	statement := `
+CREATE TABLE IF NOT EXISTS observations (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	occurred_at TEXT NOT NULL,
+	created_at TEXT NOT NULL,
+	text TEXT NOT NULL,
+	source TEXT NOT NULL
+);`
+
+	if _, err := db.Exec(statement); err != nil {
+		return fmt.Errorf("initialize sqlite schema: %w", err)
+	}
+
+	return nil
+}
