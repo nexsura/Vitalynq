@@ -44,5 +44,52 @@ VALUES (?, ?, ?, ?)`,
 }
 
 func (store *SQLiteObservationStore) List() []Observation {
-	return nil
+	rows, err := store.db.Query(
+		`SELECT id, occurred_at, created_at, text, source
+FROM observations
+ORDER BY occurred_at ASC, id ASC`,
+	)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+
+	var observations []Observation
+
+	for rows.Next() {
+		var observation Observation
+		var occurredAt string
+		var createdAt string
+
+		if err := rows.Scan(
+			&observation.ID,
+			&occurredAt,
+			&createdAt,
+			&observation.Text,
+			&observation.Source,
+		); err != nil {
+			return nil
+		}
+
+		parsedOccurredAt, err := time.Parse(time.RFC3339, occurredAt)
+		if err != nil {
+			return nil
+		}
+
+		parsedCreatedAt, err := time.Parse(time.RFC3339, createdAt)
+		if err != nil {
+			return nil
+		}
+
+		observation.OccurredAt = parsedOccurredAt
+		observation.CreatedAt = parsedCreatedAt
+
+		observations = append(observations, observation)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil
+	}
+
+	return observations
 }

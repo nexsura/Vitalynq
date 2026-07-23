@@ -71,3 +71,40 @@ func TestSQLiteObservationStoreRejectsInvalidObservation(t *testing.T) {
 		t.Fatalf("Save() error = nil, want error")
 	}
 }
+
+func TestSQLiteObservationStoreListsSavedObservations(t *testing.T) {
+	db, store := newTestSQLiteObservationStore(t)
+	defer db.Close()
+
+	first, err := store.Save(validStoreObservation("Première observation fictive"))
+	if err != nil {
+		t.Fatalf("Save(first) error = %v, want nil", err)
+	}
+
+	second, err := store.Save(validStoreObservation("Deuxième observation fictive"))
+	if err != nil {
+		t.Fatalf("Save(second) error = %v, want nil", err)
+	}
+
+	observations := store.List()
+
+	if len(observations) != 2 {
+		t.Fatalf("len(List()) = %d, want 2", len(observations))
+	}
+
+	if observations[0].ID != first.ID {
+		t.Fatalf("first ID = %d, want %d", observations[0].ID, first.ID)
+	}
+
+	if observations[1].ID != second.ID {
+		t.Fatalf("second ID = %d, want %d", observations[1].ID, second.ID)
+	}
+
+	if observations[0].Text != "Première observation fictive" {
+		t.Fatalf("first Text = %q, want %q", observations[0].Text, "Première observation fictive")
+	}
+
+	if observations[1].Text != "Deuxième observation fictive" {
+		t.Fatalf("second Text = %q, want %q", observations[1].Text, "Deuxième observation fictive")
+	}
+}
