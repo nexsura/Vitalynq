@@ -5,8 +5,10 @@ import (
 	"os"
 )
 
+const defaultDatabasePath = "vitalynq.db"
+
 func main() {
-	db, err := openSQLite("vitalynq.db")
+	db, err := openSQLite(defaultDatabasePath)
 	if err != nil {
 		fmt.Println(err)
 		return
