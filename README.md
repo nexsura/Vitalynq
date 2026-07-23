@@ -20,7 +20,7 @@ go run . observations list
 go run . observations add "Observation fictive"
 ```
 
-Les observations sont actuellement stockées en mémoire. Elles ne sont pas encore conservées après la fin du programme.
+Les observations sont actuellement stockées dans un fichier SQLite local `vitalynq.db`.
 
 ## Vérification
 
