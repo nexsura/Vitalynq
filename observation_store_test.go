@@ -79,7 +79,10 @@ func TestMemoryObservationStoreListsSavedObservations(t *testing.T) {
 		t.Fatalf("Save(second) error = %v, want nil", err)
 	}
 
-	observations := store.List()
+	observations, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
 
 	if len(observations) != 2 {
 		t.Fatalf("len(List()) = %d, want 2", len(observations))
@@ -101,10 +104,16 @@ func TestMemoryObservationStoreListReturnsCopy(t *testing.T) {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
 
-	observations := store.List()
+	observations, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
 	observations[0].Text = "Texte modifié hors du store"
 
-	observationsAgain := store.List()
+	observationsAgain, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
 
 	if observationsAgain[0].Text != "Observation fictive de test" {
 		t.Fatalf("stored Text = %q, want %q", observationsAgain[0].Text, "Observation fictive de test")

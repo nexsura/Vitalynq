@@ -67,7 +67,10 @@ func outputForArgs(args []string, store ObservationStore) string {
 }
 
 func observationsListText(store ObservationStore) string {
-	observations := store.List()
+	observations, err := store.List()
+	if err != nil {
+		return fmt.Sprintf("Impossible de lister les observations: %v", err)
+	}
 	if len(observations) == 0 {
 		return "Aucune observation enregistrée."
 	}

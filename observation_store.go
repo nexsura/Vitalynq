@@ -6,7 +6,7 @@ import (
 
 type ObservationStore interface {
 	Save(observation Observation) (Observation, error)
-	List() []Observation
+	List() ([]Observation, error)
 }
 
 type MemoryObservationStore struct {
@@ -32,9 +32,9 @@ func (store *MemoryObservationStore) Save(observation Observation) (Observation,
 	return observation, nil
 }
 
-func (store *MemoryObservationStore) List() []Observation {
+func (store *MemoryObservationStore) List() ([]Observation, error) {
 	observations := make([]Observation, len(store.observations))
 	copy(observations, store.observations)
 
-	return observations
+	return observations, nil
 }

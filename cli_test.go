@@ -146,7 +146,10 @@ func TestObservationsAddText(t *testing.T) {
 		t.Fatalf("observationsAddText() = %q, want %q", got, want)
 	}
 
-	observations := store.List()
+	observations, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
 	if len(observations) != 1 {
 		t.Fatalf("len(List()) = %d, want 1", len(observations))
 	}

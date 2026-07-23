@@ -86,7 +86,10 @@ func TestSQLiteObservationStoreListsSavedObservations(t *testing.T) {
 		t.Fatalf("Save(second) error = %v, want nil", err)
 	}
 
-	observations := store.List()
+	observations, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
 
 	if len(observations) != 2 {
 		t.Fatalf("len(List()) = %d, want 2", len(observations))
