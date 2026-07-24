@@ -17,7 +17,9 @@ go run . help
 go run . version
 go run . about
 go run . observations list
+go run . obs list
 go run . observations add "Observation fictive"
+go run . obs add "Observation fictive"
 go run . --db test.db observations list
 ```
 
