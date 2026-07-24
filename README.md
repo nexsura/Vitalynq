@@ -18,9 +18,11 @@ go run . version
 go run . about
 go run . observations list
 go run . observations add "Observation fictive"
+go run . --db test.db observations list
 ```
 
 Les observations sont actuellement stockées dans un fichier SQLite local `vitalynq.db`.
+L'option `--db` permet de choisir un autre fichier SQLite local.
 
 ## Vérification
 
