@@ -14,10 +14,11 @@ func helpText() string {
 	return `Vitalynq
 
 Commandes:
-  help     Affiche cette aide
-  version  Affiche la version
-  about    Affiche le périmètre actuel
+  help               Affiche cette aide
+  version            Affiche la version
+  about              Affiche le périmètre actuel
   observations list  Liste les observations
+  obs list           Alias de observations list
   observations add   Ajoute une observation
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
@@ -51,7 +52,7 @@ func outputForArgs(args []string, store ObservationStore) string {
 		return "Vitalynq 0.1.0-dev"
 	case "about":
 		return aboutText()
-	case "observations":
+	case "observations", "obs":
 		if len(args) > 2 && args[2] == "list" {
 			return observationsListText(store)
 		}

@@ -16,10 +16,11 @@ func TestHelpText(t *testing.T) {
 	want := `Vitalynq
 
 Commandes:
-  help     Affiche cette aide
-  version  Affiche la version
-  about    Affiche le périmètre actuel
+  help               Affiche cette aide
+  version            Affiche la version
+  about              Affiche le périmètre actuel
   observations list  Liste les observations
+  obs list           Alias de observations list
   observations add   Ajoute une observation
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
@@ -175,6 +176,26 @@ func TestOutputForArgsObservationsAddMissingText(t *testing.T) {
 
 	got := outputForArgs([]string{"vitalynq", "observations", "add"}, store)
 	want := "Texte d'observation manquant."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsObsList(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "obs", "list"}, NewMemoryObservationStore())
+	want := "Aucune observation enregistrée."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsObsAdd(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	got := outputForArgs([]string{"vitalynq", "obs", "add", "Observation fictive de test"}, store)
+	want := "Observation #1 ajoutée."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
