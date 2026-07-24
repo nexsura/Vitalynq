@@ -169,3 +169,14 @@ func TestOutputForArgsObservationsAdd(t *testing.T) {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
+
+func TestOutputForArgsObservationsAddMissingText(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	got := outputForArgs([]string{"vitalynq", "observations", "add"}, store)
+	want := "Texte d'observation manquant."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}

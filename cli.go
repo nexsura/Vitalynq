@@ -60,6 +60,10 @@ func outputForArgs(args []string, store ObservationStore) string {
 			return observationsAddText(store, args[3])
 		}
 
+		if len(args) > 2 && args[2] == "add" {
+			return "Texte d'observation manquant."
+		}
+
 		return unknownCommandText(args[1])
 	default:
 		return unknownCommandText(args[1])
