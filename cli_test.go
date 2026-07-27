@@ -57,7 +57,7 @@ func TestUnknownCommandText(t *testing.T) {
 }
 
 func TestOutputForArgsWithoutCommand(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore())
+	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore(), defaultDatabasePath)
 	want := "Vitalynq organise des données de santé locales."
 
 	if got != want {
@@ -66,7 +66,7 @@ func TestOutputForArgsWithoutCommand(t *testing.T) {
 }
 
 func TestOutputForArgsHelp(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "help"}, NewMemoryObservationStore())
+	got := outputForArgs([]string{"vitalynq", "help"}, NewMemoryObservationStore(), defaultDatabasePath)
 	want := helpText()
 
 	if got != want {
@@ -75,7 +75,7 @@ func TestOutputForArgsHelp(t *testing.T) {
 }
 
 func TestOutputForArgsVersion(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "version"}, NewMemoryObservationStore())
+	got := outputForArgs([]string{"vitalynq", "version"}, NewMemoryObservationStore(), defaultDatabasePath)
 	want := "Vitalynq 0.1.0-dev"
 
 	if got != want {
@@ -84,7 +84,7 @@ func TestOutputForArgsVersion(t *testing.T) {
 }
 
 func TestOutputForArgsAbout(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "about"}, NewMemoryObservationStore())
+	got := outputForArgs([]string{"vitalynq", "about"}, NewMemoryObservationStore(), defaultDatabasePath)
 	want := aboutText()
 
 	if got != want {
@@ -93,7 +93,7 @@ func TestOutputForArgsAbout(t *testing.T) {
 }
 
 func TestOutputForArgsUnknownCommand(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "profil"}, NewMemoryObservationStore())
+	got := outputForArgs([]string{"vitalynq", "profil"}, NewMemoryObservationStore(), defaultDatabasePath)
 	want := unknownCommandText("profil")
 
 	if got != want {
@@ -113,7 +113,7 @@ func TestObservationsListTextWithoutObservations(t *testing.T) {
 }
 
 func TestOutputForArgsObservationsList(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "observations", "list"}, NewMemoryObservationStore())
+	got := outputForArgs([]string{"vitalynq", "observations", "list"}, NewMemoryObservationStore(), defaultDatabasePath)
 	want := "Aucune observation enregistrée."
 
 	if got != want {
@@ -163,7 +163,7 @@ func TestObservationsAddText(t *testing.T) {
 func TestOutputForArgsObservationsAdd(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "Observation fictive de test"}, store)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "Observation fictive de test"}, store, defaultDatabasePath)
 	want := "Observation #1 ajoutée."
 
 	if got != want {
@@ -174,7 +174,7 @@ func TestOutputForArgsObservationsAdd(t *testing.T) {
 func TestOutputForArgsObservationsAddMissingText(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add"}, store)
+	got := outputForArgs([]string{"vitalynq", "observations", "add"}, store, defaultDatabasePath)
 	want := "Texte d'observation manquant."
 
 	if got != want {
@@ -183,7 +183,7 @@ func TestOutputForArgsObservationsAddMissingText(t *testing.T) {
 }
 
 func TestOutputForArgsObsList(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "obs", "list"}, NewMemoryObservationStore())
+	got := outputForArgs([]string{"vitalynq", "obs", "list"}, NewMemoryObservationStore(), defaultDatabasePath)
 	want := "Aucune observation enregistrée."
 
 	if got != want {
@@ -194,8 +194,26 @@ func TestOutputForArgsObsList(t *testing.T) {
 func TestOutputForArgsObsAdd(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "obs", "add", "Observation fictive de test"}, store)
+	got := outputForArgs([]string{"vitalynq", "obs", "add", "Observation fictive de test"}, store, defaultDatabasePath)
 	want := "Observation #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestDatabasePathText(t *testing.T) {
+	got := databasePathText("test.db")
+	want := "Base SQLite: test.db"
+
+	if got != want {
+		t.Fatalf("databasePathText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsDatabasePath(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "db", "path"}, NewMemoryObservationStore(), "test.db")
+	want := "Base SQLite: test.db"
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)

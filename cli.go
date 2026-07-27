@@ -40,7 +40,7 @@ func unknownCommandText(command string) string {
 	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
 
-func outputForArgs(args []string, store ObservationStore) string {
+func outputForArgs(args []string, store ObservationStore, databasePath string) string {
 	if len(args) <= 1 {
 		return appDescription()
 	}
@@ -52,6 +52,11 @@ func outputForArgs(args []string, store ObservationStore) string {
 		return "Vitalynq 0.1.0-dev"
 	case "about":
 		return aboutText()
+	case "db":
+		if len(args) > 2 && args[2] == "path" {
+			return databasePathText(databasePath)
+		}
+		return unknownCommandText(args[1])
 	case "observations", "obs":
 		if len(args) > 2 && args[2] == "list" {
 			return observationsListText(store)
@@ -102,4 +107,8 @@ func observationsAddText(store ObservationStore, text string) string {
 	}
 
 	return fmt.Sprintf("Observation #%d ajoutée.", saved.ID)
+}
+
+func databasePathText(databasePath string) string {
+	return fmt.Sprintf("Base SQLite: %s", databasePath)
 }

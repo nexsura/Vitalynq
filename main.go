@@ -23,7 +23,7 @@ func main() {
 	}
 
 	store := NewSQLiteObservationStore(db)
-	fmt.Println(outputForArgs(args, store))
+	fmt.Println(outputForArgs(args, store, databasePath))
 }
 
 func databasePathAndArgs(args []string) (string, []string) {
