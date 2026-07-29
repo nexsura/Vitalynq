@@ -306,3 +306,14 @@ func TestOutputForArgsObservationsAddWithDateMissingText(t *testing.T) {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
+
+func TestOutputForArgsObservationsAddWithInvalidDate(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "29-07-2026", "Observation fictive de test"}, store, defaultDatabasePath)
+	want := "date invalide, utilisez YYYY-MM-DD"
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
