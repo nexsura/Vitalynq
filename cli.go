@@ -20,6 +20,8 @@ Commandes:
   observations list  Liste les observations
   obs list           Alias de observations list
   observations add   Ajoute une observation
+  observations add --date YYYY-MM-DD
+                     Ajoute une observation datée
   db path            Affiche le chemin de la base SQLite
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
