@@ -25,17 +25,26 @@ func openSQLite(path string) (*sql.DB, error) {
 }
 
 func initializeSQLiteSchema(db *sql.DB) error {
-	statement := `
-CREATE TABLE IF NOT EXISTS observations (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	occurred_at TEXT NOT NULL,
-	created_at TEXT NOT NULL,
-	text TEXT NOT NULL,
-	source TEXT NOT NULL
-);`
+	statements := []string{
+		`CREATE TABLE IF NOT EXISTS observations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  occurred_at TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  text TEXT NOT NULL,
+  source TEXT NOT NULL
+  );`,
+		`CREATE TABLE IF NOT EXISTS medical_profiles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  label TEXT NOT NULL
+  );`,
+	}
 
-	if _, err := db.Exec(statement); err != nil {
-		return fmt.Errorf("initialize sqlite schema: %w", err)
+	for _, statement := range statements {
+		if _, err := db.Exec(statement); err != nil {
+			return fmt.Errorf("initialize sqlite schema: %w", err)
+		}
 	}
 
 	return nil

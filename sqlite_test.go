@@ -38,3 +38,27 @@ func TestInitializeSQLiteSchemaCreatesObservationsTable(t *testing.T) {
 		t.Fatalf("tableName = %q, want %q", tableName, "observations")
 	}
 }
+
+func TestInitializeSQLiteSchemaCreatesMedicalProfilesTable(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	var tableName string
+	err = db.QueryRow(
+		"SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'medical_profiles'",
+	).Scan(&tableName)
+	if err != nil {
+		t.Fatalf("query medical_profiles table error = %v, want nil", err)
+	}
+
+	if tableName != "medical_profiles" {
+		t.Fatalf("tablename = %q, want %q", tableName, "medical_profiles")
+	}
+}
