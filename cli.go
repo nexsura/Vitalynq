@@ -69,6 +69,10 @@ func outputForArgs(args []string, store ObservationStore, databasePath string) s
 			return observationsAddTextWithDate(store, args[4], args[5])
 		}
 
+		if len(args) > 3 && args[2] == "add" && args[3] == "--date" {
+			return "Date ou texte d'observation manquant."
+		}
+
 		if len(args) > 3 && args[2] == "add" {
 			return observationsAddText(store, args[3])
 		}
