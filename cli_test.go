@@ -131,7 +131,7 @@ func TestObservationsListTextWithObservations(t *testing.T) {
 
 	got := observationsListText(store)
 	want := `Observations:
-- #1 Observation fictive de test`
+- #1 2026-07-17 Observation fictive de test`
 
 	if got != want {
 		t.Fatalf("observationsListText() = %q, want %q", got, want)

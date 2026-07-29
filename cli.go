@@ -90,7 +90,7 @@ func observationsListText(store ObservationStore) string {
 	builder.WriteString("Observations:\n")
 
 	for _, observation := range observations {
-		fmt.Fprintf(&builder, "- #%d %s\n", observation.ID, observation.Text)
+		fmt.Fprintf(&builder, "- #%d %s %s\n", observation.ID, observation.OccurredAt.Format("2006-01-02"), observation.Text)
 	}
 
 	return strings.TrimRight(builder.String(), "\n")
