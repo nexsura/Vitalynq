@@ -113,3 +113,12 @@ func observationsAddText(store ObservationStore, text string) string {
 func databasePathText(databasePath string) string {
 	return fmt.Sprintf("Base SQLite: %s", databasePath)
 }
+
+func parseObservationDate(value string) (time.Time, error) {
+	parsed, err := time.Parse("2006-01-02", value)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("date invalide, utilisez YYYY-MM-DD")
+	}
+
+	return parsed, nil
+}

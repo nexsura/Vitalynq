@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestAppDescription(t *testing.T) {
 	got := appDescription()
@@ -219,4 +222,27 @@ func TestOutputForArgsDatabasePath(t *testing.T) {
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
+}
+
+func TestParseObservationDate(t *testing.T) {
+	got, err := parseObservationDate("2026-07-29")
+	if err != nil {
+		t.Fatalf("parseObservationDate() error = %v, want nil", err)
+	}
+
+	want := testTimeFromDate(2026, 7, 29)
+	if !got.Equal(want) {
+		t.Fatalf("date = %v, want %v", got, want)
+	}
+}
+
+func TestParseObservationDateRejectsInvalidDate(t *testing.T) {
+	_, err := parseObservationDate("29-07-2026")
+	if err == nil {
+		t.Fatalf("parseObservationDate() error = nil, want error")
+	}
+}
+
+func testTimeFromDate(year int, month time.Month, day int) time.Time {
+	return time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 }
