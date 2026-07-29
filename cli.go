@@ -63,6 +63,10 @@ func outputForArgs(args []string, store ObservationStore, databasePath string) s
 			return observationsListText(store)
 		}
 
+		if len(args) > 5 && args[2] == "add" && args[3] == "--date" {
+			return observationsAddTextWithDate(store, args[4], args[5])
+		}
+
 		if len(args) > 3 && args[2] == "add" {
 			return observationsAddText(store, args[3])
 		}
@@ -121,4 +125,23 @@ func parseObservationDate(value string) (time.Time, error) {
 	}
 
 	return parsed, nil
+}
+
+func observationsAddTextWithDate(store ObservationStore, dateValue string, text string) string {
+	occurredAt, err := parseObservationDate(dateValue)
+	if err != nil {
+		return err.Error()
+	}
+
+	observation, err := newObservation(occurredAt, text, "saisie manuelle")
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter l'observation: %v", err)
+	}
+
+	saved, err := store.Save(observation)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter l'observation: %v", err)
+	}
+
+	return fmt.Sprintf("Observation #%d ajoutée.", saved.ID)
 }

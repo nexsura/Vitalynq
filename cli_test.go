@@ -243,6 +243,42 @@ func TestParseObservationDateRejectsInvalidDate(t *testing.T) {
 	}
 }
 
+func TestObservationsAddTextWithDate(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	got := observationsAddTextWithDate(store, "2026-07-29", "Observation fictive de test")
+	want := "Observation #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("observationAddTextWithDate() = %q, want %q", got, want)
+	}
+
+	observations, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
+
+	if len(observations) != 1 {
+		t.Fatalf("len(List()) = %d, want 1", len(observations))
+	}
+
+	wantDate := testTimeFromDate(2026, 7, 29)
+	if !observations[0].OccurredAt.Equal(wantDate) {
+		t.Fatalf("OccurredAt = %v, want %v", observations[0].OccurredAt, wantDate)
+	}
+}
+
+func TestOutputForArgsObservationsAddWithDate(t *testing.T) {
+	store := NewMemoryObservationStore()
+
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29", "Observation fictive de test"}, store, defaultDatabasePath)
+	want := "Observation #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
 func testTimeFromDate(year int, month time.Month, day int) time.Time {
 	return time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 }
