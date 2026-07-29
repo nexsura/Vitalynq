@@ -21,6 +21,8 @@ go run . obs list
 go run . observations add "Observation fictive"
 go run . obs add "Observation fictive"
 go run . --db test.db observations list
+go run . db path
+go run . --db test.db db path
 ```
 
 Les observations sont actuellement stockées dans un fichier SQLite local `vitalynq.db`.
