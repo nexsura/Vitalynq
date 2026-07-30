@@ -66,3 +66,44 @@ func TestSQLiteMedicalProfileStoreRejectsInvalidProfile(t *testing.T) {
 		t.Fatalf("Save() error = nil, want error")
 	}
 }
+
+func TestSQLiteMedicalProfileStoreGetWithoutProfile(t *testing.T) {
+	db, store := newTestSQLiteMedicalProfileStore(t)
+	defer db.Close()
+
+	_, found, err := store.Get()
+	if err != nil {
+		t.Fatalf("Get() error = %v, want nil", err)
+	}
+
+	if found {
+		t.Fatalf("found = true, want false")
+	}
+}
+
+func TestSQLiteMedicalProfileStoreGetSavedProfile(t *testing.T) {
+	db, store := newTestSQLiteMedicalProfileStore(t)
+	defer db.Close()
+
+	saved, err := store.Save(validMedicalProfile("Profil fictif de test"))
+	if err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	got, found, err := store.Get()
+	if err != nil {
+		t.Fatalf("Get() error = %v, want nil", err)
+	}
+
+	if !found {
+		t.Fatalf("found = false, want true")
+	}
+
+	if got.ID != saved.ID {
+		t.Fatalf("ID = %d, want %d", got.ID, saved.ID)
+	}
+
+	if got.Label != "Profil fictif de test" {
+		t.Fatalf("Label = %q, want %q", got.Label, "Profil fictif de test")
+	}
+}

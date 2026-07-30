@@ -44,5 +44,36 @@ func (store *SQLiteMedicalProfileStore) Save(profile MedicalProfile) (MedicalPro
 }
 
 func (store *SQLiteMedicalProfileStore) Get() (MedicalProfile, bool, error) {
-	return MedicalProfile{}, false, errors.New("sqlite medical profile get is not implemented")
+	row := store.db.QueryRow(
+		`SELECT id, created_at, updated_at, label
+  FROM medical_profiles
+  ORDER BY id DESC
+  LIMIT 1`,
+	)
+
+	var profile MedicalProfile
+	var createdAt string
+	var updatedAt string
+
+	if err := row.Scan(&profile.ID, &createdAt, &updatedAt, &profile.Label); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return MedicalProfile{}, false, nil
+		}
+
+		return MedicalProfile{}, false, fmt.Errorf("get sqlite medical profile: %w", err)
+	}
+	parsedCreatedAt, err := time.Parse(time.RFC3339, createdAt)
+	if err != nil {
+		return MedicalProfile{}, false, fmt.Errorf("parse sqlite medical profile created_at: %w", err)
+	}
+
+	parsedUpdatedAt, err := time.Parse(time.RFC3339, updatedAt)
+	if err != nil {
+		return MedicalProfile{}, false, fmt.Errorf("parse sqlite medical profile updated_at: %w", err)
+	}
+
+	profile.CreatedAt = parsedCreatedAt
+	profile.UpdatedAt = parsedUpdatedAt
+
+	return profile, true, nil
 }
