@@ -63,7 +63,7 @@ func TestUnknownCommandText(t *testing.T) {
 }
 
 func TestOutputForArgsWithoutCommand(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Vitalynq organise des données de santé locales."
 
 	if got != want {
@@ -72,7 +72,7 @@ func TestOutputForArgsWithoutCommand(t *testing.T) {
 }
 
 func TestOutputForArgsHelp(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "help"}, NewMemoryObservationStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "help"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := helpText()
 
 	if got != want {
@@ -81,7 +81,7 @@ func TestOutputForArgsHelp(t *testing.T) {
 }
 
 func TestOutputForArgsVersion(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "version"}, NewMemoryObservationStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "version"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Vitalynq 0.1.0-dev"
 
 	if got != want {
@@ -90,7 +90,7 @@ func TestOutputForArgsVersion(t *testing.T) {
 }
 
 func TestOutputForArgsAbout(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "about"}, NewMemoryObservationStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "about"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := aboutText()
 
 	if got != want {
@@ -99,7 +99,7 @@ func TestOutputForArgsAbout(t *testing.T) {
 }
 
 func TestOutputForArgsUnknownCommand(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "profil"}, NewMemoryObservationStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "profil"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := unknownCommandText("profil")
 
 	if got != want {
@@ -119,7 +119,7 @@ func TestObservationsListTextWithoutObservations(t *testing.T) {
 }
 
 func TestOutputForArgsObservationsList(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "observations", "list"}, NewMemoryObservationStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "list"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Aucune observation enregistrée."
 
 	if got != want {
@@ -169,7 +169,7 @@ func TestObservationsAddText(t *testing.T) {
 func TestOutputForArgsObservationsAdd(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "Observation fictive de test"}, store, defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Observation #1 ajoutée."
 
 	if got != want {
@@ -180,7 +180,7 @@ func TestOutputForArgsObservationsAdd(t *testing.T) {
 func TestOutputForArgsObservationsAddMissingText(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add"}, store, defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add"}, store, NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Texte d'observation manquant."
 
 	if got != want {
@@ -189,7 +189,7 @@ func TestOutputForArgsObservationsAddMissingText(t *testing.T) {
 }
 
 func TestOutputForArgsObsList(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "obs", "list"}, NewMemoryObservationStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "obs", "list"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Aucune observation enregistrée."
 
 	if got != want {
@@ -200,7 +200,7 @@ func TestOutputForArgsObsList(t *testing.T) {
 func TestOutputForArgsObsAdd(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "obs", "add", "Observation fictive de test"}, store, defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "obs", "add", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Observation #1 ajoutée."
 
 	if got != want {
@@ -218,7 +218,7 @@ func TestDatabasePathText(t *testing.T) {
 }
 
 func TestOutputForArgsDatabasePath(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "db", "path"}, NewMemoryObservationStore(), "test.db")
+	got := outputForArgs([]string{"vitalynq", "db", "path"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), "test.db")
 	want := "Base SQLite: test.db"
 
 	if got != want {
@@ -273,7 +273,7 @@ func TestObservationsAddTextWithDate(t *testing.T) {
 func TestOutputForArgsObservationsAddWithDate(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29", "Observation fictive de test"}, store, defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Observation #1 ajoutée."
 
 	if got != want {
@@ -288,7 +288,7 @@ func testTimeFromDate(year int, month time.Month, day int) time.Time {
 func TestOutputForArgsObservationsAddWithDateMissingValues(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date"}, store, defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date"}, store, NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Date ou texte d'observation manquant."
 
 	if got != want {
@@ -299,7 +299,7 @@ func TestOutputForArgsObservationsAddWithDateMissingValues(t *testing.T) {
 func TestOutputForArgsObservationsAddWithDateMissingText(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29"}, store, defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29"}, store, NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "Date ou texte d'observation manquant."
 
 	if got != want {
@@ -310,7 +310,7 @@ func TestOutputForArgsObservationsAddWithDateMissingText(t *testing.T) {
 func TestOutputForArgsObservationsAddWithInvalidDate(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "29-07-2026", "Observation fictive de test"}, store, defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "29-07-2026", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), defaultDatabasePath)
 	want := "date invalide, utilisez YYYY-MM-DD"
 
 	if got != want {
@@ -341,5 +341,20 @@ func TestMedicalProfileTextWithProfile(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("medicalProfileText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsProfileShow(t *testing.T) {
+	profileStore := NewMemoryMedicalProfileStore()
+
+	if _, err := profileStore.Save(validMedicalProfile("Profil fictif de test")); err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	got := outputForArgs([]string{"vitalynq", "profile", "show"}, NewMemoryObservationStore(), profileStore, defaultDatabasePath)
+	want := "Profil médical: Profil fictif de test"
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }

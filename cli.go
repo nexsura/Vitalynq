@@ -43,7 +43,7 @@ func unknownCommandText(command string) string {
 	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
 
-func outputForArgs(args []string, store ObservationStore, databasePath string) string {
+func outputForArgs(args []string, observationStore ObservationStore, profileStore MedicalProfileStore, databasePath string) string {
 	if len(args) <= 1 {
 		return appDescription()
 	}
@@ -60,13 +60,18 @@ func outputForArgs(args []string, store ObservationStore, databasePath string) s
 			return databasePathText(databasePath)
 		}
 		return unknownCommandText(args[1])
+	case "profile":
+		if len(args) > 2 && args[2] == "show" {
+			return medicalProfileText(profileStore)
+		}
+		return unknownCommandText(args[1])
 	case "observations", "obs":
 		if len(args) > 2 && args[2] == "list" {
-			return observationsListText(store)
+			return observationsListText(observationStore)
 		}
 
 		if len(args) > 5 && args[2] == "add" && args[3] == "--date" {
-			return observationsAddTextWithDate(store, args[4], args[5])
+			return observationsAddTextWithDate(observationStore, args[4], args[5])
 		}
 
 		if len(args) > 3 && args[2] == "add" && args[3] == "--date" {
@@ -74,7 +79,7 @@ func outputForArgs(args []string, store ObservationStore, databasePath string) s
 		}
 
 		if len(args) > 3 && args[2] == "add" {
-			return observationsAddText(store, args[3])
+			return observationsAddText(observationStore, args[3])
 		}
 
 		if len(args) > 2 && args[2] == "add" {
