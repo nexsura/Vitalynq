@@ -358,3 +358,37 @@ func TestOutputForArgsProfileShow(t *testing.T) {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
+
+func TestMedicalProfileSaveText(t *testing.T) {
+	store := NewMemoryMedicalProfileStore()
+
+	got := medicalProfileSaveText(store, "Profil fictif de test")
+	want := "Profil médical #1 enregistré."
+
+	if got != want {
+		t.Fatalf("medicalProfileSaveText() = %q, want %q", got, want)
+	}
+	profile, found, err := store.Get()
+	if err != nil {
+		t.Fatalf("Get() error = %v, want nil", err)
+	}
+
+	if !found {
+		t.Fatalf("found = false, want true")
+	}
+
+	if profile.Label != "Profil fictif de test" {
+		t.Fatalf("Label = %q, want %q", profile.Label, "Profil fictif de test")
+	}
+}
+
+func TestMedicalProfileSaveTextRejectsBlankLabel(t *testing.T) {
+	store := NewMemoryMedicalProfileStore()
+
+	got := medicalProfileSaveText(store, "  ")
+	want := "Impossible d'enregistrer le profil médical: medical profile label is required"
+
+	if got != want {
+		t.Fatalf("medicalProfileSaveText() = %q, want %q", got, want)
+	}
+}

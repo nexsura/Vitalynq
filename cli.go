@@ -169,3 +169,17 @@ func medicalProfileText(store MedicalProfileStore) string {
 
 	return fmt.Sprintf("Profil médical: %s", profile.Label)
 }
+
+func medicalProfileSaveText(store MedicalProfileStore, label string) string {
+	profile, err := newMedicalProfile(label)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'enregistrer le profil médical: %v", err)
+	}
+
+	saved, err := store.Save(profile)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'enregistrer le profil médical: %v", err)
+	}
+
+	return fmt.Sprintf("Profil médical #%d enregistré.", saved.ID)
+}
