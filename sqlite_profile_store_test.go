@@ -40,3 +40,29 @@ func newTestSQLiteMedicalProfileStore(t *testing.T) (*sql.DB, *SQLiteMedicalProf
 
 	return db, NewSQLiteMedicalProfileStore(db)
 }
+
+func TestSQLiteMedicalProfileStoreSavesProfile(t *testing.T) {
+	db, store := newTestSQLiteMedicalProfileStore(t)
+	defer db.Close()
+
+	profile := validMedicalProfile("Profile fictif de test")
+
+	saved, err := store.Save(profile)
+	if err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	if saved.ID != 1 {
+		t.Fatalf("ID = %d, want 1", saved.ID)
+	}
+}
+
+func TestSQLiteMedicalProfileStoreRejectsInvalidProfile(t *testing.T) {
+	db, store := newTestSQLiteMedicalProfileStore(t)
+	defer db.Close()
+
+	_, err := store.Save(MedicalProfile{})
+	if err == nil {
+		t.Fatalf("Save() error = nil, want error")
+	}
+}
