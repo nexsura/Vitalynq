@@ -22,6 +22,8 @@ Commandes:
   help               Affiche cette aide
   version            Affiche la version
   about              Affiche le périmètre actuel
+  profile set        Enregistre le profil médical
+  profile show       Affiche le profil médical
   observations list  Liste les observations
   obs list           Alias de observations list
   observations add   Ajoute une observation
@@ -391,4 +393,30 @@ func TestMedicalProfileSaveTextRejectsBlankLabel(t *testing.T) {
 	if got != want {
 		t.Fatalf("medicalProfileSaveText() = %q, want %q", got, want)
 	}
+}
+
+func TestOutputForArgsProfilSet(t *testing.T) {
+	profileStore := NewMemoryMedicalProfileStore()
+
+	got := outputForArgs(
+		[]string{"vitalynq", "profile", "set", "Profil fictif de test"},
+		NewMemoryObservationStore(),
+		profileStore,
+		defaultDatabasePath,
+	)
+	want := "Profil médical #1 enregistré."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsProfileSetMissingLabel(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "profile", "set"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), defaultDatabasePath)
+	want := "Libellé du profil médical manquant."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+
 }

@@ -17,6 +17,8 @@ Commandes:
   help               Affiche cette aide
   version            Affiche la version
   about              Affiche le périmètre actuel
+  profile set        Enregistre le profil médical
+  profile show       Affiche le profil médical
   observations list  Liste les observations
   obs list           Alias de observations list
   observations add   Ajoute une observation
@@ -59,11 +61,21 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		if len(args) > 2 && args[2] == "path" {
 			return databasePathText(databasePath)
 		}
+
 		return unknownCommandText(args[1])
 	case "profile":
 		if len(args) > 2 && args[2] == "show" {
 			return medicalProfileText(profileStore)
 		}
+
+		if len(args) > 3 && args[2] == "set" {
+			return medicalProfileSaveText(profileStore, args[3])
+		}
+
+		if len(args) > 2 && args[2] == "set" {
+			return "Libellé du profil médical manquant."
+		}
+
 		return unknownCommandText(args[1])
 	case "observations", "obs":
 		if len(args) > 2 && args[2] == "list" {
