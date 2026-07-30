@@ -22,8 +22,10 @@ func main() {
 		return
 	}
 
-	store := NewSQLiteObservationStore(db)
-	fmt.Println(outputForArgs(args, store, NewMemoryMedicalProfileStore(), databasePath))
+	observationStore := NewSQLiteObservationStore(db)
+	profileStore := NewSQLiteMedicalProfileStore(db)
+
+	fmt.Println(outputForArgs(args, observationStore, profileStore, databasePath))
 }
 
 func databasePathAndArgs(args []string) (string, []string) {
