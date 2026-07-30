@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+type MedicalProfileStore interface {
+	Save(profile MedicalProfile) (MedicalProfile, error)
+	Get() (MedicalProfile, bool, error)
+}
+
 type MemoryMedicalProfileStore struct {
 	nextID     int64
 	profile    MedicalProfile
