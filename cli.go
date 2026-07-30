@@ -151,3 +151,16 @@ func observationsAddTextWithDate(store ObservationStore, dateValue string, text 
 
 	return fmt.Sprintf("Observation #%d ajoutée.", saved.ID)
 }
+
+func medicalProfileText(store MedicalProfileStore) string {
+	profile, found, err := store.Get()
+	if err != nil {
+		return fmt.Sprintf("Impossible de lire le profil médical: %v", err)
+	}
+
+	if !found {
+		return "Aucun profil médical enregistré."
+	}
+
+	return fmt.Sprintf("Profil médical: %s", profile.Label)
+}

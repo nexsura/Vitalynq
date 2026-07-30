@@ -317,3 +317,29 @@ func TestOutputForArgsObservationsAddWithInvalidDate(t *testing.T) {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
+
+func TestMedicalProfileTextWithoutProfile(t *testing.T) {
+	store := NewMemoryMedicalProfileStore()
+
+	got := medicalProfileText(store)
+	want := "Aucun profil médical enregistré."
+
+	if got != want {
+		t.Fatalf("medicalProfileText() = %q, want %q", got, want)
+	}
+}
+
+func TestMedicalProfileTextWithProfile(t *testing.T) {
+	store := NewMemoryMedicalProfileStore()
+
+	if _, err := store.Save(validMedicalProfile("Profil fictif de test")); err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	got := medicalProfileText(store)
+	want := "Profil médical: Profil fictif de test"
+
+	if got != want {
+		t.Fatalf("medicalProfileText() = %q, want %q", got, want)
+	}
+}
