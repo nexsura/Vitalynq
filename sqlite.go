@@ -39,6 +39,17 @@ func initializeSQLiteSchema(db *sql.DB) error {
   updated_at TEXT NOT NULL,
   label TEXT NOT NULL
   );`,
+		`CREATE TABLE IF NOT EXISTS measurements (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  occurred_at TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  indicator TEXT NOT NULL,
+  value REAL NOT NULL,
+  unit TEXT NOT NULL,
+  context TEXT NOT NULL,
+  method TEXT NOT NULL,
+  source TEXT NOT NULL
+  );`,
 	}
 
 	for _, statement := range statements {
