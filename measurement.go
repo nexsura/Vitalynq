@@ -35,5 +35,17 @@ func validateMeasurement(measurement Measurement) error {
 		return errors.New("measurement unit is required")
 	}
 
+	if strings.TrimSpace(measurement.Context) == "" {
+		return errors.New("measurement context is required")
+	}
+
+	if strings.TrimSpace(measurement.Method) == "" {
+		return errors.New("measurement method is required")
+	}
+
+	if strings.TrimSpace(measurement.Source) == "" {
+		return errors.New("measurement source is required")
+	}
+
 	return nil
 }
