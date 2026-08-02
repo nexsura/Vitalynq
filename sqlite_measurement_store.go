@@ -71,13 +71,13 @@ func (store *SQLiteMeasurementStore) List() ([]Measurement, error) {
 
 	for rows.Next() {
 		var measurement Measurement
-		var occuredAt string
-		var createAt string
+		var occurredAt string
+		var createdAt string
 
 		if err := rows.Scan(
 			&measurement.ID,
-			&occuredAt,
-			&createAt,
+			&occurredAt,
+			&createdAt,
 			&measurement.Indicator,
 			&measurement.Value,
 			&measurement.Unit,
@@ -87,18 +87,18 @@ func (store *SQLiteMeasurementStore) List() ([]Measurement, error) {
 		); err != nil {
 			return nil, fmt.Errorf("scan sqlite measurement: %w", err)
 		}
-		parseOccurredAt, err := time.Parse(time.RFC3339, occuredAt)
+		parsedOccurredAt, err := time.Parse(time.RFC3339, occurredAt)
 		if err != nil {
 			return nil, fmt.Errorf("parse sqlite measurement occurred_at: %w", err)
 		}
 
-		parseCreateAt, err := time.Parse(time.RFC3339, createAt)
+		parsedCreatedAt, err := time.Parse(time.RFC3339, createdAt)
 		if err != nil {
-			return nil, fmt.Errorf("parse sqlite measurement create_at: %w", err)
+			return nil, fmt.Errorf("parse sqlite measurement created_at: %w", err)
 		}
 
-		measurement.OccurredAt = parseOccurredAt
-		measurement.CreatedAt = parseCreateAt
+		measurement.OccurredAt = parsedOccurredAt
+		measurement.CreatedAt = parsedCreatedAt
 
 		measurements = append(measurements, measurement)
 	}
