@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"time"
 )
@@ -58,5 +57,55 @@ func (store *SQLiteMeasurementStore) Save(measurement Measurement) (Measurement,
 }
 
 func (store *SQLiteMeasurementStore) List() ([]Measurement, error) {
-	return nil, errors.New("sqlite measurement list is not implemented")
+	rows, err := store.db.Query(
+		`SELECT id, occurred_at, created_at, indicator, value, unit, context, method, source
+  FROM measurements
+  ORDER BY occurred_at ASC, id ASC`,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("list sqlite measurements: %w", err)
+	}
+	defer rows.Close()
+
+	var measurements []Measurement
+
+	for rows.Next() {
+		var measurement Measurement
+		var occuredAt string
+		var createAt string
+
+		if err := rows.Scan(
+			&measurement.ID,
+			&occuredAt,
+			&createAt,
+			&measurement.Indicator,
+			&measurement.Value,
+			&measurement.Unit,
+			&measurement.Context,
+			&measurement.Method,
+			&measurement.Source,
+		); err != nil {
+			return nil, fmt.Errorf("scan sqlite measurement: %w", err)
+		}
+		parseOccurredAt, err := time.Parse(time.RFC3339, occuredAt)
+		if err != nil {
+			return nil, fmt.Errorf("parse sqlite measurement occurred_at: %w", err)
+		}
+
+		parseCreateAt, err := time.Parse(time.RFC3339, createAt)
+		if err != nil {
+			return nil, fmt.Errorf("parse sqlite measurement create_at: %w", err)
+		}
+
+		measurement.OccurredAt = parseOccurredAt
+		measurement.CreatedAt = parseCreateAt
+
+		measurements = append(measurements, measurement)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate sqlite measurements: %w", err)
+	}
+
+	return measurements, nil
 }

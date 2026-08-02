@@ -64,3 +64,48 @@ func TestSQLiteMeasurementStoreRejectsInvalidMeasurement(t *testing.T) {
 		t.Fatalf("Save() error = nil, want error")
 	}
 }
+
+func TestSQLiteMeasurementStoreListsSavedMeasurements(t *testing.T) {
+	db, store := newTestSQLiteMeasurementStore(t)
+	defer db.Close()
+
+	first, err := store.Save(validMeasurement())
+	if err != nil {
+		t.Fatalf("Save(first) error = %v, want nil", err)
+	}
+
+	secondMeasurement := validMeasurement()
+	secondMeasurement.Indicator = "taille"
+	secondMeasurement.Value = 175
+	secondMeasurement.Unit = "cm"
+
+	second, err := store.Save(secondMeasurement)
+	if err != nil {
+		t.Fatalf("Save(second) error = %v, want nil", err)
+	}
+
+	measurements, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
+
+	if len(measurements) != 2 {
+		t.Fatalf("len(List()) = %d, want 2", len(measurements))
+	}
+
+	if measurements[0].ID != first.ID {
+		t.Fatalf("first ID = %d, want %d", measurements[0].ID, first.ID)
+	}
+
+	if measurements[1].ID != second.ID {
+		t.Fatalf("second ID = %d, want %d", measurements[1].ID, second.ID)
+	}
+
+	if measurements[0].Indicator != "poids" {
+		t.Fatalf("first indicator = %q, want %q", measurements[0].Indicator, "poids")
+	}
+
+	if measurements[1].Indicator != "taille" {
+		t.Fatalf("second indicator = %q, want %q", measurements[1].Indicator, "taille")
+	}
+}
