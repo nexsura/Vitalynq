@@ -79,3 +79,42 @@ func validMeasurement() Measurement {
 		Source:     "saisie manuelle",
 	}
 }
+
+func TestNewMeasurementCreatesValidMeasurement(t *testing.T) {
+	measurement, err := newMeasurement(
+		testTime(),
+		" poids ",
+		72.5,
+		" kg ",
+		" test fictif ",
+		" saisie manuelle ",
+		" saisie manuelle ",
+	)
+
+	if err != nil {
+		t.Fatalf("newMeasurement() error = %v, want nil", err)
+	}
+
+	if measurement.Indicator != "poids" {
+		t.Fatalf("Indicator = %q, want %q", measurement.Indicator, "poids")
+	}
+
+	if measurement.Unit != "kg" {
+		t.Fatalf("Unit = %q, want %q", measurement.Unit, "kg")
+	}
+
+	if measurement.CreatedAt.IsZero() {
+		t.Fatalf("CreatedAt is zero, want creation date")
+	}
+
+	if measurement.ID != 0 {
+		t.Fatalf("ID = %d, want 0", measurement.ID)
+	}
+}
+
+func TestNewMeasurementRejectsInvalidMeasurement(t *testing.T) {
+	_, err := newMeasurement(testTime(), "", 72.5, "kg", "test fictif", "saisie manuelle", "saisie manuelle")
+	if err == nil {
+		t.Fatalf("newMeasurement() error = nil, want error")
+	}
+}

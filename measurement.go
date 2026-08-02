@@ -49,3 +49,22 @@ func validateMeasurement(measurement Measurement) error {
 
 	return nil
 }
+
+func newMeasurement(occurredAt time.Time, indicator string, value float64, unit string, context string, method string, source string) (Measurement, error) {
+	measurement := Measurement{
+		OccurredAt: occurredAt,
+		CreatedAt:  time.Now().UTC(),
+		Indicator:  strings.TrimSpace(indicator),
+		Value:      value,
+		Unit:       strings.TrimSpace(unit),
+		Context:    strings.TrimSpace(context),
+		Method:     strings.TrimSpace(method),
+		Source:     strings.TrimSpace(source),
+	}
+
+	if err := validateMeasurement(measurement); err != nil {
+		return Measurement{}, err
+	}
+
+	return measurement, nil
+}
