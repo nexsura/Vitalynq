@@ -16,7 +16,7 @@ func NewSQLiteMeasurementStore(db *sql.DB) *SQLiteMeasurementStore {
 }
 
 func (store *SQLiteMeasurementStore) Save(measurement Measurement) (Measurement, error) {
-	return Measurement{}, errors.New("sqlite measurement save it not implemented")
+	return Measurement{}, errors.New("sqlite measurement save is not implemented")
 }
 
 func (store *SQLiteMeasurementStore) List() ([]Measurement, error) {

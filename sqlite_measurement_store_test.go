@@ -14,7 +14,7 @@ func TestNewSQLiteMeasurementStore(t *testing.T) {
 
 	store := NewSQLiteMeasurementStore(db)
 	if store == nil {
-		t.Fatalf("NewSQLiteMeasurementsStore() = nil, want store")
+		t.Fatalf("NewSQLiteMeasurementStore() = nil, want store")
 	}
 
 	if store.db != db {
@@ -29,7 +29,7 @@ func TestSQLiteMeasurementStoreImplementsMeasurementStore(t *testing.T) {
 func newTestSQLiteMeasurementStore(t *testing.T) (*sql.DB, *SQLiteMeasurementStore) {
 	t.Helper()
 
-	db, err := openSQLite("memory")
+	db, err := openSQLite(":memory:")
 	if err != nil {
 		t.Fatalf("openSQLite() error = %v, want nil", err)
 	}
