@@ -40,3 +40,27 @@ func newTestSQLiteMeasurementStore(t *testing.T) (*sql.DB, *SQLiteMeasurementSto
 
 	return db, NewSQLiteMeasurementStore(db)
 }
+
+func TestSQLiteMeasurementStoreSavesMeasurement(t *testing.T) {
+	db, store := newTestSQLiteMeasurementStore(t)
+	defer db.Close()
+
+	saved, err := store.Save(validMeasurement())
+	if err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	if saved.ID != 1 {
+		t.Fatalf("ID = %d, want 1", saved.ID)
+	}
+}
+
+func TestSQLiteMeasurementStoreRejectsInvalidMeasurement(t *testing.T) {
+	db, store := newTestSQLiteMeasurementStore(t)
+	defer db.Close()
+
+	_, err := store.Save(Measurement{})
+	if err == nil {
+		t.Fatalf("Save() error = nil, want error")
+	}
+}
