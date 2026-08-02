@@ -22,9 +22,9 @@ func main() {
 		return
 	}
 
-	measurementStore := NewMemoryMeasurementStore()
 	observationStore := NewSQLiteObservationStore(db)
 	profileStore := NewSQLiteMedicalProfileStore(db)
+	measurementStore := NewSQLiteMeasurementStore(db)
 
 	fmt.Println(outputForArgs(args, observationStore, profileStore, measurementStore, databasePath))
 }
