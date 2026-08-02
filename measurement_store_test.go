@@ -5,7 +5,7 @@ import (
 )
 
 func TestMemoryMeasurementStoreSavesMeasurementWithID(t *testing.T) {
-	store := newMemoryMeasurementStore()
+	store := NewMemoryMeasurementStore()
 
 	saved, err := store.Save(validMeasurement())
 	if err != nil {
@@ -18,7 +18,7 @@ func TestMemoryMeasurementStoreSavesMeasurementWithID(t *testing.T) {
 }
 
 func TestMemoryMeasurementStoreRejectsInvalidMeasurement(t *testing.T) {
-	store := newMemoryMeasurementStore()
+	store := NewMemoryMeasurementStore()
 
 	_, err := store.Save(Measurement{})
 	if err == nil {
@@ -26,8 +26,8 @@ func TestMemoryMeasurementStoreRejectsInvalidMeasurement(t *testing.T) {
 	}
 }
 
-func TestMemoryMeasurementStoreListsSaveMeasurements(t *testing.T) {
-	store := newMemoryMeasurementStore()
+func TestMemoryMeasurementStoreListsSavedMeasurements(t *testing.T) {
+	store := NewMemoryMeasurementStore()
 
 	first, err := store.Save(validMeasurement())
 	if err != nil {

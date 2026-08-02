@@ -12,7 +12,7 @@ type MemoryMeasurementStore struct {
 	measurements []Measurement
 }
 
-func newMemoryMeasurementStore() *MemoryMeasurementStore {
+func NewMemoryMeasurementStore() *MemoryMeasurementStore {
 	return &MemoryMeasurementStore{
 		nextID: 1,
 	}
