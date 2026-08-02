@@ -418,5 +418,31 @@ func TestOutputForArgsProfileSetMissingLabel(t *testing.T) {
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
+}
 
+func TestMeasurementsListTextWithoutMeasurements(t *testing.T) {
+	store := NewMemoryMeasurementStore()
+
+	got := measurementsListText(store)
+	want := "Aucune mesure enregistrée."
+
+	if got != want {
+		t.Fatalf("measurementsListText() %q, want %q", got, want)
+	}
+}
+
+func TestMeasurementsListTextWithMeasurements(t *testing.T) {
+	store := NewMemoryMeasurementStore()
+
+	if _, err := store.Save(validMeasurement()); err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	got := measurementsListText(store)
+	want := `Mesures:
+- #1 2026-07-17 poids 72.50 kg`
+
+	if got != want {
+		t.Fatalf("measurementsListText() = %q, want %q", got, want)
+	}
 }

@@ -195,3 +195,31 @@ func medicalProfileSaveText(store MedicalProfileStore, label string) string {
 
 	return fmt.Sprintf("Profil médical #%d enregistré.", saved.ID)
 }
+
+func measurementsListText(store MeasurementStore) string {
+	measurements, err := store.List()
+	if err != nil {
+		return fmt.Sprintf("Impossible de lister les mesures: %v", err)
+	}
+
+	if len(measurements) == 0 {
+		return "Aucune mesure enregistrée."
+	}
+
+	var builder strings.Builder
+	builder.WriteString("Mesures:\n")
+
+	for _, measurement := range measurements {
+		fmt.Fprintf(
+			&builder,
+			"- #%d %s %s %.2f %s\n",
+			measurement.ID,
+			measurement.OccurredAt.Format("2006-01-02"),
+			measurement.Indicator,
+			measurement.Value,
+			measurement.Unit,
+		)
+	}
+
+	return strings.TrimRight(builder.String(), "\n")
+}
