@@ -26,6 +26,8 @@ go run . --db test.db db path
 go run . observations add --date 2026-07-29 "Observation fictive"
 go run . profile set "Profil fictif"
 go run . profile show
+go run . measurements list
+go run . measurements add poids 72.5 kg "test fictif" "saisie manuelle" "saisie manuelle"
 ```
 
 Les observations sont actuellement stockées dans un fichier SQLite local `vitalynq.db`.
