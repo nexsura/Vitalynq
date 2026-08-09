@@ -32,6 +32,8 @@ Commandes:
   db path            Affiche le chemin de la base SQLite
   measurements list  Liste les mesures
   measurements add   Ajoute une mesure
+  measurements add --date YYYY-MM-DD
+                     Ajoute une mesure datée
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
@@ -579,5 +581,22 @@ func TestMeasurementsAddTextWithDate(t *testing.T) {
 	wantDate := testTimeFromDate(2026, 7, 29)
 	if !measurements[0].OccurredAt.Equal(wantDate) {
 		t.Fatalf("OccurredAt = %v, want %v", measurements[0].OccurredAt, wantDate)
+	}
+}
+
+func TestOutputForArgsMeasurementsAddWithDate(t *testing.T) {
+	measurementStore := NewMemoryMeasurementStore()
+
+	got := outputForArgs(
+		[]string{"vitalynq", "measurements", "add", "--date", "2026-07-29", "poids", "72.5", "kg", "test fictif", "saisie manuelle", "saisie manuelle"},
+		NewMemoryObservationStore(),
+		NewMemoryMedicalProfileStore(),
+		measurementStore,
+		defaultDatabasePath,
+	)
+	want := "Mesure #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }

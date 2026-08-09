@@ -28,6 +28,8 @@ Commandes:
   db path            Affiche le chemin de la base SQLite
   measurements list  Liste les mesures
   measurements add   Ajoute une mesure
+  measurements add --date YYYY-MM-DD
+                     Ajoute une mesure datée
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 }
@@ -106,6 +108,28 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 	case "measurements":
 		if len(args) > 2 && args[2] == "list" {
 			return measurementsListText(measurementStore)
+		}
+
+		if len(args) > 10 && args[2] == "add" && args[3] == "--date" {
+			value, err := strconv.ParseFloat(args[6], 64)
+			if err != nil {
+				return "Valeur de mesure invalide."
+			}
+
+			return measurementsAddTextWithDate(
+				measurementStore,
+				args[4],
+				args[5],
+				value,
+				args[7],
+				args[8],
+				args[9],
+				args[10],
+			)
+		}
+
+		if len(args) > 2 && args[2] == "add" && len(args) > 3 && args[3] == "--date" {
+			return "Date ou arguments de mesure manquants."
 		}
 
 		if len(args) > 8 && args[2] == "add" {
