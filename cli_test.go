@@ -551,3 +551,33 @@ func TestOutputForArgsMeasurementsAddRejectsInvalidValue(t *testing.T) {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
+
+func TestMeasurementsAddTextWithDate(t *testing.T) {
+	store := NewMemoryMeasurementStore()
+
+	got := measurementsAddTextWithDate(
+		store,
+		"2026-07-29",
+		"poids",
+		72.5,
+		"kg",
+		"test fictif",
+		"saisie manuelle",
+		"saisie manuelle",
+	)
+	want := "Mesure #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("measurementsAddTextWithDate() = %q, want %q", got, want)
+	}
+
+	measurements, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
+
+	wantDate := testTimeFromDate(2026, 7, 29)
+	if !measurements[0].OccurredAt.Equal(wantDate) {
+		t.Fatalf("OccurredAt = %v, want %v", measurements[0].OccurredAt, wantDate)
+	}
+}

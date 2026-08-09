@@ -268,3 +268,22 @@ func measurementsAddText(store MeasurementStore, indicator string, value float64
 
 	return fmt.Sprintf("Mesure #%d ajoutée.", saved.ID)
 }
+
+func measurementsAddTextWithDate(store MeasurementStore, datevalue string, indicator string, value float64, unit string, context string, method string, source string) string {
+	occurredAt, err := parseObservationDate(datevalue)
+	if err != nil {
+		return err.Error()
+	}
+
+	measurement, err := newMeasurement(occurredAt, indicator, value, unit, context, method, source)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter la mesure: %v", err)
+	}
+
+	saved, err := store.Save(measurement)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter la mesure: %v", err)
+	}
+
+	return fmt.Sprintf("Mesure #%d ajoutée.", saved.ID)
+}
