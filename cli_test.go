@@ -632,3 +632,52 @@ func TestAppointmentsListTextWithAppointments(t *testing.T) {
 		t.Fatalf("appointmentsListText() = %q, want %q", got, want)
 	}
 }
+
+func TestAppointmentsAddText(t *testing.T) {
+	store := NewMemoryAppointmentStore()
+
+	got := appointmentsAddText(
+		store,
+		"2026-07-29",
+		"consultation fictive",
+		"rendez-vous",
+		"cabinet fictif",
+		"saisie manuelle",
+	)
+	want := "Rendez-vous #1 ajouté."
+
+	if got != want {
+		t.Fatalf("appointmentsAddText() = %q, want %q", got, want)
+	}
+
+	appointments, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
+
+	if len(appointments) != 1 {
+		t.Fatalf("len(List()) = %d, want 1", len(appointments))
+	}
+
+	if appointments[0].Title != "consultation fictive" {
+		t.Fatalf("Title = %q, want %q", appointments[0].Title, "consultation fictive")
+	}
+}
+
+func TestAppointmentsAddTextRejectsInvalidDate(t *testing.T) {
+	store := NewMemoryAppointmentStore()
+
+	got := appointmentsAddText(
+		store,
+		"29-07-2026",
+		"consultation fictive",
+		"rendez-vous",
+		"cabinet fictif",
+		"saisie manuelle",
+	)
+	want := "date invalide, utilisez YYYY-MM-DD"
+
+	if got != want {
+		t.Fatalf("appointmentsAddText() = %q, want %q", got, want)
+	}
+}

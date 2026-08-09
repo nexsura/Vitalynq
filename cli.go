@@ -345,3 +345,22 @@ func appointmentsListText(store AppointmentStore) string {
 
 	return strings.TrimRight(builder.String(), "\n")
 }
+
+func appointmentsAddText(store AppointmentStore, dateValue string, title string, category string, location string, source string) string {
+	scheduledAt, err := parseObservationDate(dateValue)
+	if err != nil {
+		return err.Error()
+	}
+
+	appointment, err := newAppointment(scheduledAt, title, category, location, source)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter le rendez-vous: %v", err)
+	}
+
+	saved, err := store.Save(appointment)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter le rendez-vous: %v", err)
+	}
+
+	return fmt.Sprintf("Rendez-vous #%d ajouté.", saved.ID)
+}
