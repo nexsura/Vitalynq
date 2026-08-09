@@ -50,7 +50,7 @@ func unknownCommandText(command string) string {
 	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
 
-func outputForArgs(args []string, observationStore ObservationStore, profileStore MedicalProfileStore, measurementStore MeasurementStore, databasePath string) string {
+func outputForArgs(args []string, observationStore ObservationStore, profileStore MedicalProfileStore, measurementStore MeasurementStore, appointmentStore AppointmentStore, databasePath string) string {
 	if len(args) <= 1 {
 		return appDescription()
 	}
@@ -101,6 +101,13 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 
 		if len(args) > 2 && args[2] == "add" {
 			return "Texte d'observation manquant."
+		}
+
+		return unknownCommandText(args[1])
+
+	case "appointments":
+		if len(args) > 2 && args[2] == "list" {
+			return appointmentsListText(appointmentStore)
 		}
 
 		return unknownCommandText(args[1])

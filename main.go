@@ -25,8 +25,9 @@ func main() {
 	observationStore := NewSQLiteObservationStore(db)
 	profileStore := NewSQLiteMedicalProfileStore(db)
 	measurementStore := NewSQLiteMeasurementStore(db)
+	appointmentStore := NewSQLiteAppointmentStore(db)
 
-	fmt.Println(outputForArgs(args, observationStore, profileStore, measurementStore, databasePath))
+	fmt.Println(outputForArgs(args, observationStore, profileStore, measurementStore, appointmentStore, databasePath))
 }
 
 func databasePathAndArgs(args []string) (string, []string) {
