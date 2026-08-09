@@ -30,6 +30,8 @@ Commandes:
   observations add --date YYYY-MM-DD
                      Ajoute une observation datée
   db path            Affiche le chemin de la base SQLite
+  measurements list  Liste les mesures
+  measurements add   Ajoute une mesure
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
@@ -515,5 +517,37 @@ func TestMeasurementsAddTextRejectsMissingUnit(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("measurementsAddText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsMeasurementsAdd(t *testing.T) {
+	measurementStore := NewMemoryMeasurementStore()
+
+	got := outputForArgs(
+		[]string{"vitalynq", "measurements", "add", "poids", "72.5", "kg", "test fictif", "saisie manuelle", "saisie manuelle"},
+		NewMemoryObservationStore(),
+		NewMemoryMedicalProfileStore(),
+		measurementStore,
+		defaultDatabasePath,
+	)
+	want := "Mesure #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsMeasurementsAddRejectsInvalidValue(t *testing.T) {
+	got := outputForArgs(
+		[]string{"vitalynq", "measurements", "add", "poids", "abc", "kg", "test fictif", "saisie manuelle", "saisie manuelle"},
+		NewMemoryObservationStore(),
+		NewMemoryMedicalProfileStore(),
+		NewMemoryMeasurementStore(),
+		defaultDatabasePath,
+	)
+	want := "Valeur de mesure invalide."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }

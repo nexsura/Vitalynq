@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -25,6 +26,8 @@ Commandes:
   observations add --date YYYY-MM-DD
                      Ajoute une observation datée
   db path            Affiche le chemin de la base SQLite
+  measurements list  Liste les mesures
+  measurements add   Ajoute une mesure
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 }
@@ -103,6 +106,27 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 	case "measurements":
 		if len(args) > 2 && args[2] == "list" {
 			return measurementsListText(measurementStore)
+		}
+
+		if len(args) > 8 && args[2] == "add" {
+			value, err := strconv.ParseFloat(args[4], 64)
+			if err != nil {
+				return "Valeur de mesure invalide."
+			}
+
+			return measurementsAddText(
+				measurementStore,
+				args[3],
+				value,
+				args[5],
+				args[6],
+				args[7],
+				args[8],
+			)
+		}
+
+		if len(args) > 2 && args[2] == "add" {
+			return "Arguments de mesure manquants."
 		}
 
 		return unknownCommandText(args[1])
