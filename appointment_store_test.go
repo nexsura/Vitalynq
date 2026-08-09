@@ -48,7 +48,7 @@ func TestMemoryAppointmentStoreListsSavedAppointments(t *testing.T) {
 	}
 
 	if len(appointments) != 2 {
-		t.Fatalf("len(List()) = %d, want nil", len(appointments))
+		t.Fatalf("len(List()) = %d, want 2", len(appointments))
 	}
 
 	if appointments[0].ID != first.ID {
