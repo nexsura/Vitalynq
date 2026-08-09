@@ -50,6 +50,15 @@ func initializeSQLiteSchema(db *sql.DB) error {
   method TEXT NOT NULL,
   source TEXT NOT NULL
   );`,
+		`CREATE TABLE IF NOT EXISTS appointments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  scheduled_at TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  location TEXT NOT NULL,
+  source TEXT NOT NULL
+    );`,
 	}
 
 	for _, statement := range statements {
