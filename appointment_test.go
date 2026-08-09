@@ -12,7 +12,7 @@ func TestValidateAppointmentAcceptsValidAppointment(t *testing.T) {
 	}
 }
 
-func TestValidateAppointmentRejectsMissingScheduleAt(t *testing.T) {
+func TestValidateAppointmentRejectsMissingScheduledAt(t *testing.T) {
 	appointment := validAppointment()
 	appointment.ScheduledAt = testTimeFromDate(1, 1, 1)
 
@@ -24,6 +24,24 @@ func TestValidateAppointmentRejectsMissingScheduleAt(t *testing.T) {
 func TestValidateAppointmentRejectsMissingTitle(t *testing.T) {
 	appointment := validAppointment()
 	appointment.Title = "	"
+
+	if err := validateAppointment(appointment); err == nil {
+		t.Fatalf("validateAppointment() error = nil, want error")
+	}
+}
+
+func TestValidateAppointmentRejectsMissingCategory(t *testing.T) {
+	appointment := validAppointment()
+	appointment.Category = "	"
+
+	if err := validateAppointment(appointment); err == nil {
+		t.Fatalf("validateAppointment() error = nil, want error")
+	}
+}
+
+func TestValidateAppointmentRejectsMissingSource(t *testing.T) {
+	appointment := validAppointment()
+	appointment.Source = "	"
 
 	if err := validateAppointment(appointment); err == nil {
 		t.Fatalf("validateAppointment() error = nil, want error")
