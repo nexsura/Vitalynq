@@ -34,6 +34,8 @@ Commandes:
   measurements add   Ajoute une mesure
   measurements add --date YYYY-MM-DD
                      Ajoute une mesure datée
+  appointments list  Liste les rendez-vous
+  appointments add   Ajoute un rendez-vous
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
@@ -679,5 +681,39 @@ func TestAppointmentsAddTextRejectsInvalidDate(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("appointmentsAddText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsAppointmentsAdd(t *testing.T) {
+	AppointmentStore := NewMemoryAppointmentStore()
+
+	got := outputForArgs(
+		[]string{"vitalynq", "appointments", "add", "2026-07-29", "consultation fictive", "rendez-vous", "cabinet fictif", "saisie manuelle"},
+		NewMemoryObservationStore(),
+		NewMemoryMedicalProfileStore(),
+		NewMemoryMeasurementStore(),
+		AppointmentStore,
+		defaultDatabasePath,
+	)
+	want := "Rendez-vous #1 ajouté."
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsAppointmentsAddMissingArguments(t *testing.T) {
+	got := outputForArgs(
+		[]string{"vitalynq", "appointments", "add"},
+		NewMemoryObservationStore(),
+		NewMemoryMedicalProfileStore(),
+		NewMemoryMeasurementStore(),
+		NewMemoryAppointmentStore(),
+		defaultDatabasePath,
+	)
+	want := "Arguments de rendez-vous manquants."
+
+	if got != want {
+		t.Fatalf("outputForArgs() %q, want %q", got, want)
 	}
 }

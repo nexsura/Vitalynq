@@ -30,6 +30,8 @@ Commandes:
   measurements add   Ajoute une mesure
   measurements add --date YYYY-MM-DD
                      Ajoute une mesure datée
+  appointments list  Liste les rendez-vous
+  appointments add   Ajoute un rendez-vous
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 }
@@ -108,6 +110,21 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 	case "appointments":
 		if len(args) > 2 && args[2] == "list" {
 			return appointmentsListText(appointmentStore)
+		}
+
+		if len(args) > 7 && args[2] == "add" {
+			return appointmentsAddText(
+				appointmentStore,
+				args[3],
+				args[4],
+				args[5],
+				args[6],
+				args[7],
+			)
+		}
+
+		if len(args) > 2 && args[2] == "add" {
+			return "Arguments de rendez-vous manquants."
 		}
 
 		return unknownCommandText(args[1])
