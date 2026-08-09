@@ -3,6 +3,8 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"fmt"
+	"time"
 )
 
 type SQLiteAppointmentStore struct {
@@ -16,7 +18,31 @@ func NewSQLiteAppointmentStore(db *sql.DB) *SQLiteAppointmentStore {
 }
 
 func (store *SQLiteAppointmentStore) Save(appointment Appointment) (Appointment, error) {
-	return Appointment{}, errors.New("sqlite appointment save is not implemented")
+	if err := validateAppointment(appointment); err != nil {
+		return Appointment{}, fmt.Errorf("save sqlite appointment: %w", err)
+	}
+
+	result, err := store.db.Exec(
+		`INSERT INTO appointments (scheduled_at, created_at, title, category, location, source) VALUES (?, ?, ?, ?, ?, ?)`,
+		appointment.ScheduledAt.UTC().Format(time.RFC3339),
+		appointment.CreatedAt.UTC().Format(time.RFC3339),
+		appointment.Title,
+		appointment.Category,
+		appointment.Location,
+		appointment.Source,
+	)
+	if err != nil {
+		return Appointment{}, fmt.Errorf("insert sqlite appointment: %w", err)
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return Appointment{}, fmt.Errorf("get sqlite apointment id: %w", err)
+	}
+
+	appointment.ID = id
+
+	return appointment, nil
 }
 
 func (store *SQLiteAppointmentStore) List() ([]Appointment, error) {

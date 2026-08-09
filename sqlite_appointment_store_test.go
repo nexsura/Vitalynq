@@ -40,3 +40,27 @@ func newTestSQLiteAppointmentStore(t *testing.T) (*sql.DB, *SQLiteAppointmentSto
 
 	return db, NewSQLiteAppointmentStore(db)
 }
+
+func TestSQLiteAppointmentStoreSavesAppointment(t *testing.T) {
+	db, store := newTestSQLiteAppointmentStore(t)
+	defer db.Close()
+
+	saved, err := store.Save(validAppointment())
+	if err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	if saved.ID != 1 {
+		t.Fatalf("ID = %d, want 1", saved.ID)
+	}
+}
+
+func TestSQLiteAppointmentStoreRejectsInvalidAppointment(t *testing.T) {
+	db, store := newTestSQLiteAppointmentStore(t)
+	defer db.Close()
+
+	_, err := store.Save(Appointment{})
+	if err == nil {
+		t.Fatalf("Save() error = nil, want error")
+	}
+}
