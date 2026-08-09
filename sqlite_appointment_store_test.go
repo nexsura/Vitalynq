@@ -64,3 +64,46 @@ func TestSQLiteAppointmentStoreRejectsInvalidAppointment(t *testing.T) {
 		t.Fatalf("Save() error = nil, want error")
 	}
 }
+
+func TestSQLiteAppointmentStoreListsSavedAppointments(t *testing.T) {
+	db, store := newTestSQLiteAppointmentStore(t)
+	defer db.Close()
+
+	first, err := store.Save(validAppointment())
+	if err != nil {
+		t.Fatalf("Save(first) error = %v, want nil", err)
+	}
+
+	secondAppointment := validAppointment()
+	secondAppointment.Title = "Examen fictif"
+
+	second, err := store.Save(secondAppointment)
+	if err != nil {
+		t.Fatalf("Save(second) error = %v, want nil", err)
+	}
+
+	appointments, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
+
+	if len(appointments) != 2 {
+		t.Fatalf("len(List()) = %d, want 2", len(appointments))
+	}
+
+	if appointments[0].ID != first.ID {
+		t.Fatalf("first ID = %d, want %d", appointments[0].ID, first.ID)
+	}
+
+	if appointments[1].ID != second.ID {
+		t.Fatalf("second ID = %d, want %d", appointments[1].ID, second.ID)
+	}
+
+	if appointments[0].Title != "consultation fictive" {
+		t.Fatalf("first Title = %q, want %q", appointments[0].Title, "consultation fictive")
+	}
+
+	if appointments[1].Title != "Examen fictif" {
+		t.Fatalf("second Title = %q, want %q", appointments[1].Title, "Examen fictif")
+	}
+}
