@@ -29,7 +29,7 @@ func TestSQLiteAppointmentStoreImplementsAppointmentStore(t *testing.T) {
 func newTestSQLiteAppointmentStore(t *testing.T) (*sql.DB, *SQLiteAppointmentStore) {
 	t.Helper()
 
-	db, err := openSQLite("memory")
+	db, err := openSQLite(":memory:")
 	if err != nil {
 		t.Fatalf("openSQLite() error = %v, want nil", err)
 	}
