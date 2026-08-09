@@ -600,3 +600,30 @@ func TestOutputForArgsMeasurementsAddWithDate(t *testing.T) {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
+
+func TestAppointmentsListTextWithoutAppointments(t *testing.T) {
+	store := NewMemoryAppointmentStore()
+
+	got := appointmentsListText(store)
+	want := "Aucun rendez-vous enregistré."
+
+	if got != want {
+		t.Fatalf("Save() error = %q, want %q", got, want)
+	}
+}
+
+func TestAppointmentsListTextWithAppointments(t *testing.T) {
+	store := NewMemoryAppointmentStore()
+
+	if _, err := store.Save(validAppointment()); err != nil {
+		t.Fatalf("Save() error = %v, want nil", err)
+	}
+
+	got := appointmentsListText(store)
+	want := `Rendez-vous:
+- #1 2026-07-17 consultation fictive (rendez-vous)`
+
+	if got != want {
+		t.Fatalf("appointmentsListText() = %q, want %q", got, want)
+	}
+}

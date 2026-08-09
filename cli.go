@@ -311,3 +311,30 @@ func measurementsAddTextWithDate(store MeasurementStore, datevalue string, indic
 
 	return fmt.Sprintf("Mesure #%d ajoutée.", saved.ID)
 }
+
+func appointmentsListText(store AppointmentStore) string {
+	appointments, err := store.List()
+	if err != nil {
+		return fmt.Sprintf("Impossible de lister les rendez-vous: %v", err)
+	}
+
+	if len(appointments) == 0 {
+		return "Aucun rendez-vous enregistré."
+	}
+
+	var builder strings.Builder
+	builder.WriteString("Rendez-vous:\n")
+
+	for _, appointment := range appointments {
+		fmt.Fprintf(
+			&builder,
+			"- #%d %s %s (%s)\n",
+			appointment.ID,
+			appointment.ScheduledAt.Format("2006-01-02"),
+			appointment.Title,
+			appointment.Category,
+		)
+	}
+
+	return strings.TrimRight(builder.String(), "\n")
+}
