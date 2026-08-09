@@ -462,3 +462,58 @@ func TestOutputForArgsMeasurementsList(t *testing.T) {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
+
+func TestMeasurementsAddText(t *testing.T) {
+	store := NewMemoryMeasurementStore()
+
+	got := measurementsAddText(
+		store,
+		"poids",
+		72.5,
+		"kg",
+		"test fictif",
+		"saisie manuelle",
+		"saisie manuelle",
+	)
+	want := "Mesure #1 ajoutée."
+
+	if got != want {
+		t.Fatalf("measurementsAddText() = %q, want %q", got, want)
+	}
+
+	measurements, err := store.List()
+	if err != nil {
+		t.Fatalf("List() error = %v, want nil", err)
+	}
+
+	if len(measurements) != 1 {
+		t.Fatalf("len(List()) = %d, want 1", len(measurements))
+	}
+
+	if measurements[0].Indicator != "poids" {
+		t.Fatalf("Indicator = %q, want %q", measurements[0].Indicator, "poids")
+	}
+
+	if measurements[0].Unit != "kg" {
+		t.Fatalf("Unit = %q, want %q", measurements[0].Unit, "kg")
+	}
+}
+
+func TestMeasurementsAddTextRejectsMissingUnit(t *testing.T) {
+	store := NewMemoryMeasurementStore()
+
+	got := measurementsAddText(
+		store,
+		"poids",
+		72.5,
+		"	",
+		"test fictif",
+		"saisie manuelle",
+		"saisie manuelle",
+	)
+	want := "Impossible d'ajouter la mesure: measurement unit is required"
+
+	if got != want {
+		t.Fatalf("measurementsAddText() = %q, want %q", got, want)
+	}
+}

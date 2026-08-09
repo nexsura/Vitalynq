@@ -230,3 +230,17 @@ func measurementsListText(store MeasurementStore) string {
 
 	return strings.TrimRight(builder.String(), "\n")
 }
+
+func measurementsAddText(store MeasurementStore, indicator string, value float64, unit string, context string, method string, source string) string {
+	measurement, err := newMeasurement(time.Now().UTC(), indicator, value, unit, context, method, source)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter la mesure: %v", err)
+	}
+
+	saved, err := store.Save(measurement)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'ajouter la mesure: %v", err)
+	}
+
+	return fmt.Sprintf("Mesure #%d ajoutée.", saved.ID)
+}
