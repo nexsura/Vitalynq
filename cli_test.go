@@ -717,3 +717,31 @@ func TestOutputForArgsAppointmentsAddMissingArguments(t *testing.T) {
 		t.Fatalf("outputForArgs() %q, want %q", got, want)
 	}
 }
+
+func TestSummaryText(t *testing.T) {
+	observationStore := NewMemoryObservationStore()
+	measurementStore := NewMemoryMeasurementStore()
+	appointmentStore := NewMemoryAppointmentStore()
+
+	if _, err := observationStore.Save(validStoreObservation("Observation fictive")); err != nil {
+		t.Fatalf("Save(observation) error = %v, want nil", err)
+	}
+
+	if _, err := measurementStore.Save(validMeasurement()); err != nil {
+		t.Fatalf("Save(measurement) error = %v, want nil", err)
+	}
+
+	if _, err := appointmentStore.Save(validAppointment()); err != nil {
+		t.Fatalf("Save(appointment) error = %v, want nil", err)
+	}
+
+	got := summaryText(observationStore, measurementStore, appointmentStore)
+	want := `Bilan:
+- Observations: 1
+- Mesures: 1
+- Rendez-vous: 1`
+
+	if got != want {
+		t.Fatalf("summaryText() = %q, want %q", got, want)
+	}
+}

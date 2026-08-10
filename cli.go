@@ -381,3 +381,26 @@ func appointmentsAddText(store AppointmentStore, dateValue string, title string,
 
 	return fmt.Sprintf("Rendez-vous #%d ajouté.", saved.ID)
 }
+
+func summaryText(observationStore ObservationStore, measurementStore MeasurementStore, appointmentStore AppointmentStore) string {
+	observations, err := observationStore.List()
+	if err != nil {
+		return fmt.Sprintf("Impossible de produire le bilan: %v", err)
+	}
+
+	measurements, err := measurementStore.List()
+	if err != nil {
+		return fmt.Sprintf("Impossible de produire le bilan: %v", err)
+	}
+
+	appointments, err := appointmentStore.List()
+	if err != nil {
+		return fmt.Sprintf("Impossible de produire le bilan: %v", err)
+	}
+
+	return fmt.Sprintf("Bilan:\n- Observations: %d\n- Mesures: %d\n- Rendez-vous: %d",
+		len(observations),
+		len(measurements),
+		len(appointments),
+	)
+}
