@@ -31,6 +31,7 @@ go run . measurements add poids 72.5 kg "test fictif" "saisie manuelle" "saisie 
 go run . measurements add --date 2026-07-29 poids 72.5 kg "test fictif" "saisie manuelle" "saisie manuelle"
 go run . appointments list
 go run . appointments add 2026-07-29 "consultation fictive" rendez-vous "cabinet fictif" "saisie manuelle"
+go run . summary
 ```
 
 Les observations sont actuellement stockées dans un fichier SQLite local `vitalynq.db`.
