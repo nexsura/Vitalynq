@@ -36,6 +36,7 @@ Commandes:
                      Ajoute une mesure datée
   appointments list  Liste les rendez-vous
   appointments add   Ajoute un rendez-vous
+  summary            Affiche un bilan synthétique
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
@@ -743,5 +744,32 @@ func TestSummaryText(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("summaryText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsSummary(t *testing.T) {
+	observationStore := NewMemoryObservationStore()
+	measurementStore := NewMemoryMeasurementStore()
+	appointmentStore := NewMemoryAppointmentStore()
+
+	if _, err := observationStore.Save(validStoreObservation("Observation fictive")); err != nil {
+		t.Fatalf("Save(observation) error = %v, want nil", err)
+	}
+
+	got := outputForArgs(
+		[]string{"vitalynq", "summary"},
+		observationStore,
+		NewMemoryMedicalProfileStore(),
+		measurementStore,
+		appointmentStore,
+		defaultDatabasePath,
+	)
+	want := `Bilan:
+- Observations: 1
+- Mesures: 0
+- Rendez-vous: 0`
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }

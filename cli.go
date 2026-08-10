@@ -32,6 +32,7 @@ Commandes:
                      Ajoute une mesure datée
   appointments list  Liste les rendez-vous
   appointments add   Ajoute un rendez-vous
+  summary            Affiche un bilan synthétique
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 }
@@ -178,6 +179,9 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		}
 
 		return unknownCommandText(args[1])
+
+	case "summary":
+		return summaryText(observationStore, measurementStore, appointmentStore)
 	default:
 		return unknownCommandText(args[1])
 	}
