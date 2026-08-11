@@ -16,6 +16,7 @@ go run .
 go run . help
 go run . version
 go run . about
+go run . privacy
 go run . observations list
 go run . obs list
 go run . observations add "Observation fictive"
@@ -37,7 +38,10 @@ go run . export
 
 Les observations sont actuellement stockées dans un fichier SQLite local `vitalynq.db`.
 L'option `--db` permet de choisir un autre fichier SQLite local.
+
 La commande `export` affiche les données locales au format JSON dans le terminal. Elle n'envoie aucune donnée vers un serveur, un cloud ou un service externe.
+
+La commande `privacy` affiche les garanties et limites de confidentialité de Vitalynq : stockage local, absence de cloud, absence de télémétrie et responsabilité de protéger les fichiers locaux.
 
 ## Vérification
 
