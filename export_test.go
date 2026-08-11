@@ -36,6 +36,10 @@ func TestBuildExportSnapshot(t *testing.T) {
 		t.Fatalf("Profile = nil, want profile")
 	}
 
+	if snapshot.ExportVersion != exportVersion {
+		t.Fatalf("ExportVersion = %q, want %q", snapshot.ExportVersion, exportVersion)
+	}
+
 	if len(snapshot.Observations) != 1 {
 		t.Fatalf("len(Observations) = %d, want 1", len(snapshot.Observations))
 	}
@@ -51,9 +55,10 @@ func TestBuildExportSnapshot(t *testing.T) {
 
 func TestExportSnapshotJSON(t *testing.T) {
 	snapshot := ExportSnapshot{
-		Observations: []Observation{validStoreObservation("Observation fictive")},
-		Measurements: []Measurement{validMeasurement()},
-		Appointments: []Appointment{validAppointment()},
+		ExportVersion: exportVersion,
+		Observations:  []Observation{validStoreObservation("Observation fictive")},
+		Measurements:  []Measurement{validMeasurement()},
+		Appointments:  []Appointment{validAppointment()},
 	}
 
 	jsonText, err := exportSnapshotJSON(snapshot)
@@ -70,6 +75,7 @@ func TestExportSnapshotJSON(t *testing.T) {
 	assertJSONKey(t, exported, "observations")
 	assertJSONKey(t, exported, "measurements")
 	assertJSONKey(t, exported, "appointments")
+	assertJSONKey(t, exported, "export_version")
 
 	assertContains(t, jsonText, `"id"`)
 	assertContains(t, jsonText, `"created_at"`)
@@ -78,6 +84,8 @@ func TestExportSnapshotJSON(t *testing.T) {
 	assertContains(t, jsonText, `"indicator"`)
 	assertContains(t, jsonText, `"value"`)
 	assertContains(t, jsonText, `"unit"`)
+	assertContains(t, jsonText, `"export_version"`)
+	assertContains(t, jsonText, `"1"`)
 }
 
 func assertJSONKey(t *testing.T, exported map[string]any, key string) {

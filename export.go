@@ -5,11 +5,14 @@ import (
 	"fmt"
 )
 
+const exportVersion = "1"
+
 type ExportSnapshot struct {
-	Profile      *MedicalProfile `json:"profile"`
-	Observations []Observation   `json:"observations"`
-	Measurements []Measurement   `json:"measurements"`
-	Appointments []Appointment   `json:"appointments"`
+	ExportVersion string          `json:"export_version"`
+	Profile       *MedicalProfile `json:"profile"`
+	Observations  []Observation   `json:"observations"`
+	Measurements  []Measurement   `json:"measurements"`
+	Appointments  []Appointment   `json:"appointments"`
 }
 
 func buildExportSnapshot(profileStore MedicalProfileStore, observationStore ObservationStore, measurementStore MeasurementStore, appointmentStore AppointmentStore) (ExportSnapshot, error) {
@@ -34,9 +37,10 @@ func buildExportSnapshot(profileStore MedicalProfileStore, observationStore Obse
 	}
 
 	snapshot := ExportSnapshot{
-		Observations: observations,
-		Measurements: measurements,
-		Appointments: appointments,
+		ExportVersion: exportVersion,
+		Observations:  observations,
+		Measurements:  measurements,
+		Appointments:  appointments,
 	}
 
 	if found {
