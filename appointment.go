@@ -7,13 +7,13 @@ import (
 )
 
 type Appointment struct {
-	ID          int64
-	ScheduledAt time.Time
-	CreatedAt   time.Time
-	Title       string
-	Category    string
-	Location    string
-	Source      string
+	ID          int64     `json:"id"`
+	ScheduledAt time.Time `json:"scheduled_at"`
+	CreatedAt   time.Time `json:"created_at"`
+	Title       string    `json:"title"`
+	Category    string    `json:"category"`
+	Location    string    `json:"location"`
+	Source      string    `json:"source"`
 }
 
 func validateAppointment(appointment Appointment) error {

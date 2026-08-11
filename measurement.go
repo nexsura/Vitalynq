@@ -7,15 +7,15 @@ import (
 )
 
 type Measurement struct {
-	ID         int64
-	OccurredAt time.Time
-	CreatedAt  time.Time
-	Indicator  string
-	Value      float64
-	Unit       string
-	Context    string
-	Method     string
-	Source     string
+	ID         int64     `json:"id"`
+	OccurredAt time.Time `json:"occurred_at"`
+	CreatedAt  time.Time `json:"created_at"`
+	Indicator  string    `json:"indicator"`
+	Value      float64   `json:"value"`
+	Unit       string    `json:"unit"`
+	Context    string    `json:"context"`
+	Method     string    `json:"method"`
+	Source     string    `json:"source"`
 }
 
 func validateMeasurement(measurement Measurement) error {

@@ -7,10 +7,10 @@ import (
 )
 
 type MedicalProfile struct {
-	ID        int64
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Label     string
+	ID        int64     `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Label     string    `json:"label"`
 }
 
 func validateMedicalProfile(profile MedicalProfile) error {

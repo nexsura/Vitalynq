@@ -7,11 +7,11 @@ import (
 )
 
 type Observation struct {
-	ID         int64
-	OccurredAt time.Time
-	CreatedAt  time.Time
-	Text       string
-	Source     string
+	ID         int64     `json:"id"`
+	OccurredAt time.Time `json:"occurred_at"`
+	CreatedAt  time.Time `json:"created_at"`
+	Text       string    `json:"text"`
+	Source     string    `json:"source"`
 }
 
 func validateObservation(observation Observation) error {

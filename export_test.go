@@ -70,6 +70,14 @@ func TestExportSnapshotJSON(t *testing.T) {
 	assertJSONKey(t, exported, "observations")
 	assertJSONKey(t, exported, "measurements")
 	assertJSONKey(t, exported, "appointments")
+
+	assertContains(t, jsonText, `"id"`)
+	assertContains(t, jsonText, `"created_at"`)
+	assertContains(t, jsonText, `"occurred_at"`)
+	assertContains(t, jsonText, `"scheduled_at"`)
+	assertContains(t, jsonText, `"indicator"`)
+	assertContains(t, jsonText, `"value"`)
+	assertContains(t, jsonText, `"unit"`)
 }
 
 func assertJSONKey(t *testing.T, exported map[string]any, key string) {
