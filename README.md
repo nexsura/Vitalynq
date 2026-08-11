@@ -32,10 +32,12 @@ go run . measurements add --date 2026-07-29 poids 72.5 kg "test fictif" "saisie 
 go run . appointments list
 go run . appointments add 2026-07-29 "consultation fictive" rendez-vous "cabinet fictif" "saisie manuelle"
 go run . summary
+go run . export
 ```
 
 Les observations sont actuellement stockées dans un fichier SQLite local `vitalynq.db`.
 L'option `--db` permet de choisir un autre fichier SQLite local.
+La commande `export` affiche les données locales au format JSON dans le terminal. Elle n'envoie aucune donnée vers un serveur, un cloud ou un service externe.
 
 ## Vérification
 
