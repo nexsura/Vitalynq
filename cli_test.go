@@ -32,6 +32,7 @@ Commandes:
   observations add --date YYYY-MM-DD
                      Ajoute une observation datée
   db path            Affiche le chemin de la base SQLite
+  db info            Affiche les informations de stockage local
   measurements list  Liste les mesures
   measurements add   Ajoute une mesure
   measurements add --date YYYY-MM-DD
@@ -259,6 +260,30 @@ func TestDatabasePathText(t *testing.T) {
 func TestOutputForArgsDatabasePath(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "db", "path"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), "test.db")
 	want := "Base SQLite: test.db"
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestDatabaseInfoText(t *testing.T) {
+	got := databaseInfoText("test.db")
+	want := `Base SQLite: test.db
+Stockage: local
+Cloud: non
+Télémétrie: non`
+
+	if got != want {
+		t.Fatalf("databaseInfoText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsDatabaseInfo(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "db", "info"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), "test.db")
+	want := `Base SQLite: test.db
+Stockage: local
+Cloud: non
+Télémétrie: non`
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
