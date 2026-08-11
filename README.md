@@ -17,6 +17,7 @@ go run . help
 go run . version
 go run . about
 go run . privacy
+go run . limitations
 go run . observations list
 go run . obs list
 go run . observations add "Observation fictive"
@@ -46,6 +47,8 @@ L'option `--db` permet de choisir un autre fichier SQLite local.
 La commande `export` affiche les données locales au format JSON dans le terminal. Elle n'envoie aucune donnée vers un serveur, un cloud ou un service externe.
 
 La commande `privacy` affiche les garanties et limites de confidentialité de Vitalynq : stockage local, absence de cloud, absence de télémétrie et responsabilité de protéger les fichiers locaux.
+
+La commande `limitations` affiche les limites fonctionnelles de Vitalynq : organisation de données uniquement, sans diagnostic, sans recommandation de traitement, sans prédiction et sans remplacement d'un professionnel de santé.
 
 ## Vérification
 
