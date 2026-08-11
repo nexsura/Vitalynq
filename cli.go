@@ -19,6 +19,7 @@ Commandes:
   version            Affiche la version
   about              Affiche le périmètre actuel
   privacy            Affiche les informations de confidentialité
+  limitations        Affiche les limites de Vitalynq
   profile set        Enregistre le profil médical
   profile show       Affiche le profil médical
   observations list  Liste les observations
@@ -66,6 +67,18 @@ L'utilisateur reste responsable de la protection du fichier SQLite et des export
 Vitalynq organise des données. Il ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
 }
 
+func limitationsText() string {
+	return `Limites de Vitalynq
+
+Vitalynq organise des données personnelles de santé.
+Vitalynq ne pose pas de diagnostic.
+Vitalynq ne recommande aucun traitement.
+Vitalynq ne prédit pas l'évolution d'un état de santé.
+Vitalynq ne remplace pas un professionnel de santé.
+
+En cas de question médicale, contactez un professionnel de santé qualifié.`
+}
+
 func unknownCommandText(command string) string {
 	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
@@ -84,6 +97,8 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		return aboutText()
 	case "privacy":
 		return privacyText()
+	case "limitations":
+		return limitationsText()
 	case "db":
 		if len(args) > 2 && args[2] == "path" {
 			return databasePathText(databasePath)

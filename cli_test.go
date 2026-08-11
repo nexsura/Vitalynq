@@ -24,6 +24,7 @@ Commandes:
   version            Affiche la version
   about              Affiche le périmètre actuel
   privacy            Affiche les informations de confidentialité
+  limitations        Affiche les limites de Vitalynq
   profile set        Enregistre le profil médical
   profile show       Affiche le profil médical
   observations list  Liste les observations
@@ -82,6 +83,32 @@ Vitalynq organise des données. Il ne pose pas de diagnostic et ne remplace pas 
 
 	if got != want {
 		t.Fatalf("privacyText() = %q, want %q", got, want)
+	}
+}
+
+func TestLimitationsText(t *testing.T) {
+	got := limitationsText()
+	want := `Limites de Vitalynq
+
+Vitalynq organise des données personnelles de santé.
+Vitalynq ne pose pas de diagnostic.
+Vitalynq ne recommande aucun traitement.
+Vitalynq ne prédit pas l'évolution d'un état de santé.
+Vitalynq ne remplace pas un professionnel de santé.
+
+En cas de question médicale, contactez un professionnel de santé qualifié.`
+
+	if got != want {
+		t.Fatalf("limitationsText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsLimitations(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "limitations"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	want := limitationsText()
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
 	}
 }
 
