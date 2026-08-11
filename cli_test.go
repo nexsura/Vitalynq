@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 	"time"
 )
@@ -37,6 +38,7 @@ Commandes:
   appointments list  Liste les rendez-vous
   appointments add   Ajoute un rendez-vous
   summary            Affiche un bilan synthétique
+  export             Exporte les données locales en JSON
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
@@ -771,5 +773,39 @@ func TestOutputForArgsSummary(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsExport(t *testing.T) {
+	profileStore := NewMemoryMedicalProfileStore()
+	observationStore := NewMemoryObservationStore()
+	measurementStore := NewMemoryMeasurementStore()
+	appointmentStore := NewMemoryAppointmentStore()
+
+	if _, err := observationStore.Save(validStoreObservation("Observation fictive")); err != nil {
+		t.Fatalf("Save(observation) error = %v, want nil", err)
+	}
+
+	got := outputForArgs(
+		[]string{"vitalynq", "export"},
+		observationStore,
+		profileStore,
+		measurementStore,
+		appointmentStore,
+		defaultDatabasePath,
+	)
+
+	assertContains(t, got, `"profile"`)
+	assertContains(t, got, `"observations"`)
+	assertContains(t, got, `"measurements"`)
+	assertContains(t, got, `"appointments"`)
+	assertContains(t, got, `"Observation fictive"`)
+}
+
+func assertContains(t *testing.T, got string, want string) {
+	t.Helper()
+
+	if !strings.Contains(got, want) {
+		t.Fatalf("got %q, want it to contain %q", got, want)
 	}
 }

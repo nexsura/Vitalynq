@@ -33,6 +33,7 @@ Commandes:
   appointments list  Liste les rendez-vous
   appointments add   Ajoute un rendez-vous
   summary            Affiche un bilan synthétique
+  export             Exporte les données locales en JSON
 
 Vitalynq organise des données. Il ne pose pas de diagnostic.`
 }
@@ -182,6 +183,9 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 
 	case "summary":
 		return summaryText(observationStore, measurementStore, appointmentStore)
+
+	case "export":
+		return exportText(profileStore, observationStore, measurementStore, appointmentStore)
 	default:
 		return unknownCommandText(args[1])
 	}
@@ -407,4 +411,18 @@ func summaryText(observationStore ObservationStore, measurementStore Measurement
 		len(measurements),
 		len(appointments),
 	)
+}
+
+func exportText(profileStore MedicalProfileStore, observationStore ObservationStore, measurementStore MeasurementStore, appointmentStore AppointmentStore) string {
+	snapshot, err := buildExportSnapshot(profileStore, observationStore, measurementStore, appointmentStore)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'exporter les données: %v", err)
+	}
+
+	jsonText, err := exportSnapshotJSON(snapshot)
+	if err != nil {
+		return fmt.Sprintf("Impossible d'exporter les données: %v", err)
+	}
+
+	return jsonText
 }
