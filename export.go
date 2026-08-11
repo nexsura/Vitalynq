@@ -1,12 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type ExportSnapshot struct {
-	Profile      *MedicalProfile
-	Observations []Observation
-	Measurements []Measurement
-	Appointments []Appointment
+	Profile      *MedicalProfile `json:"profile"`
+	Observations []Observation   `json:"observations"`
+	Measurements []Measurement   `json:"measurements"`
+	Appointments []Appointment   `json:"appointments"`
 }
 
 func buildExportSnapshot(profileStore MedicalProfileStore, observationStore ObservationStore, measurementStore MeasurementStore, appointmentStore AppointmentStore) (ExportSnapshot, error) {
@@ -41,4 +44,13 @@ func buildExportSnapshot(profileStore MedicalProfileStore, observationStore Obse
 	}
 
 	return snapshot, nil
+}
+
+func exportSnapshotJSON(snapshot ExportSnapshot) (string, error) {
+	data, err := json.MarshalIndent(snapshot, "", " ")
+	if err != nil {
+		return "", fmt.Errorf("export snapshot json: %w", err)
+	}
+
+	return string(data), nil
 }

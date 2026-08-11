@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"testing"
 )
 
@@ -45,5 +46,36 @@ func TestBuildExportSnapshot(t *testing.T) {
 
 	if len(snapshot.Appointments) != 1 {
 		t.Fatalf("len(Appointments) = %d, want 1", len(snapshot.Appointments))
+	}
+}
+
+func TestExportSnapshotJSON(t *testing.T) {
+	snapshot := ExportSnapshot{
+		Observations: []Observation{validStoreObservation("Observation fictive")},
+		Measurements: []Measurement{validMeasurement()},
+		Appointments: []Appointment{validAppointment()},
+	}
+
+	jsonText, err := exportSnapshotJSON(snapshot)
+	if err != nil {
+		t.Fatalf("exportSnapshotJSON() error = %v, want nil", err)
+	}
+
+	var exported map[string]any
+	if err := json.Unmarshal([]byte(jsonText), &exported); err != nil {
+		t.Fatalf("json.Unmarshal() error = %v, want nil", err)
+	}
+
+	assertJSONKey(t, exported, "profile")
+	assertJSONKey(t, exported, "observations")
+	assertJSONKey(t, exported, "measurements")
+	assertJSONKey(t, exported, "appointments")
+}
+
+func assertJSONKey(t *testing.T, exported map[string]any, key string) {
+	t.Helper()
+
+	if _, exists := exported[key]; !exists {
+		t.Fatalf("JSON key %q is missing", key)
 	}
 }
