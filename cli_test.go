@@ -23,6 +23,7 @@ Commandes:
   help               Affiche cette aide
   version            Affiche la version
   about              Affiche le périmètre actuel
+  privacy            Affiche les informations de confidentialité
   profile set        Enregistre le profil médical
   profile show       Affiche le profil médical
   observations list  Liste les observations
@@ -61,6 +62,24 @@ Vitalynq ne pose pas de diagnostic et ne remplace pas un professionnel de santé
 
 	if got != want {
 		t.Fatalf("aboutText() = %q, want %q", got, want)
+	}
+}
+
+func TestPrivacyText(t *testing.T) {
+	got := privacyText()
+	want := `Confidentialité Vitalynq
+
+Vitalynq stocke les données localement dans un fichier SQLite.
+Vitalynq n'envoie aucune donnée vers un serveur, un cloud ou une API externe.
+Vitalynq n'utilise pas de télémétrie.
+
+Les exports JSON sont affichés localement dans le terminal.
+L'utilisateur reste responsable de la protection du fichier SQLite et des exports.
+
+Vitalynq organise des données. Il ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
+
+	if got != want {
+		t.Fatalf("privacyText() = %q, want %q", got, want)
 	}
 }
 
@@ -103,6 +122,15 @@ func TestOutputForArgsVersion(t *testing.T) {
 func TestOutputForArgsAbout(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "about"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := aboutText()
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsPrivacy(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "privacy"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	want := privacyText()
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)

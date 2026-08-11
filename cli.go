@@ -18,6 +18,7 @@ Commandes:
   help               Affiche cette aide
   version            Affiche la version
   about              Affiche le périmètre actuel
+  privacy            Affiche les informations de confidentialité
   profile set        Enregistre le profil médical
   profile show       Affiche le profil médical
   observations list  Liste les observations
@@ -50,6 +51,19 @@ Périmètre actuel:
 Vitalynq ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
 }
 
+func privacyText() string {
+	return `Confidentialité Vitalynq
+
+Vitalynq stocke les données localement dans un fichier SQLite.
+Vitalynq n'envoie aucune donnée vers un serveur, un cloud ou une API externe.
+Vitalynq n'utilise pas de télémétrie.
+
+Les exports JSON sont affichés localement dans le terminal.
+L'utilisateur reste responsable de la protection du fichier SQLite et des exports.
+
+Vitalynq organise des données. Il ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
+}
+
 func unknownCommandText(command string) string {
 	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
@@ -66,6 +80,8 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		return "Vitalynq 0.1.0-dev"
 	case "about":
 		return aboutText()
+	case "privacy":
+		return privacyText()
 	case "db":
 		if len(args) > 2 && args[2] == "path" {
 			return databasePathText(databasePath)
