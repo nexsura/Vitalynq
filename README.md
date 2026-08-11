@@ -26,6 +26,8 @@ go run . db path
 go run . --db test.db db path
 go run . db info
 go run . --db test.db db info
+go run . db check
+go run . --db test.db db check
 go run . observations add --date 2026-07-29 "Observation fictive"
 go run . profile set "Profil fictif"
 go run . profile show
