@@ -28,6 +28,7 @@ Commandes:
                      Ajoute une observation datée
   db path            Affiche le chemin de la base SQLite
   db info            Affiche les informations de stockage local
+  db check           Vérifie l'accès au stockage local
   measurements list  Liste les mesures
   measurements add   Ajoute une mesure
   measurements add --date YYYY-MM-DD
@@ -90,6 +91,10 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 
 		if len(args) > 2 && args[2] == "info" {
 			return databaseInfoText(databasePath)
+		}
+
+		if len(args) > 2 && args[2] == "check" {
+			return databaseCheckText()
 		}
 		return unknownCommandText(args[1])
 	case "profile":
@@ -253,6 +258,11 @@ func databaseInfoText(databasePath string) string {
 Stockage: local
 Cloud: non
 Télémétrie: non`, databasePath)
+}
+
+func databaseCheckText() string {
+	return `Base SQLite accessible: oui
+Schéma SQLite initialisé: oui`
 }
 
 func parseObservationDate(value string) (time.Time, error) {

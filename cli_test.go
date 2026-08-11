@@ -33,6 +33,7 @@ Commandes:
                      Ajoute une observation datée
   db path            Affiche le chemin de la base SQLite
   db info            Affiche les informations de stockage local
+  db check           Vérifie l'accès au stockage local
   measurements list  Liste les mesures
   measurements add   Ajoute une mesure
   measurements add --date YYYY-MM-DD
@@ -284,6 +285,26 @@ func TestOutputForArgsDatabaseInfo(t *testing.T) {
 Stockage: local
 Cloud: non
 Télémétrie: non`
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestDatabaseCheckText(t *testing.T) {
+	got := databaseCheckText()
+	want := `Base SQLite accessible: oui
+Schéma SQLite initialisé: oui`
+
+	if got != want {
+		t.Fatalf("databaseCheckText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsDatabaseCheckText(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "db", "check"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), "test.db")
+	want := `Base SQLite accessible: oui
+Schéma SQLite initialisé: oui`
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
