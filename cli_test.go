@@ -121,6 +121,28 @@ func TestUnknownCommandText(t *testing.T) {
 	}
 }
 
+func TestMissingObservationText(t *testing.T) {
+	got := missingObservationText()
+	want := `Texte d'observation manquant.
+
+Usage: vitalynq observations add "Observation fictive"`
+
+	if got != want {
+		t.Fatalf("missingObservationText() = %q, want %q", got, want)
+	}
+}
+
+func TestMissingObservationDateText(t *testing.T) {
+	got := missingObservationDateText()
+	want := `Date ou texte d'observation manquant.
+
+Usage: vitalynq observations add --date YYYY-MM-DD "Observation fictive"`
+
+	if got != want {
+		t.Fatalf("missingObservationDateText() = %q, want %q", got, want)
+	}
+}
+
 func TestOutputForArgsWithoutCommand(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := "Vitalynq organise des données de santé locales."
@@ -249,7 +271,7 @@ func TestOutputForArgsObservationsAddMissingText(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := outputForArgs([]string{"vitalynq", "observations", "add"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Texte d'observation manquant."
+	want := missingObservationText()
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -401,7 +423,7 @@ func TestOutputForArgsObservationsAddWithDateMissingValues(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Date ou texte d'observation manquant."
+	want := missingObservationDateText()
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -412,7 +434,7 @@ func TestOutputForArgsObservationsAddWithDateMissingText(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Date ou texte d'observation manquant."
+	want := missingObservationDateText()
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)

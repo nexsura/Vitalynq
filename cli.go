@@ -83,6 +83,18 @@ func unknownCommandText(command string) string {
 	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
 
+func missingObservationText() string {
+	return `Texte d'observation manquant.
+
+Usage: vitalynq observations add "Observation fictive"`
+}
+
+func missingObservationDateText() string {
+	return `Date ou texte d'observation manquant.
+
+Usage: vitalynq observations add --date YYYY-MM-DD "Observation fictive"`
+}
+
 func outputForArgs(args []string, observationStore ObservationStore, profileStore MedicalProfileStore, measurementStore MeasurementStore, appointmentStore AppointmentStore, databasePath string) string {
 	if len(args) <= 1 {
 		return appDescription()
@@ -136,7 +148,7 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		}
 
 		if len(args) > 3 && args[2] == "add" && args[3] == "--date" {
-			return "Date ou texte d'observation manquant."
+			return missingObservationDateText()
 		}
 
 		if len(args) > 3 && args[2] == "add" {
@@ -144,7 +156,7 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		}
 
 		if len(args) > 2 && args[2] == "add" {
-			return "Texte d'observation manquant."
+			return missingObservationText()
 		}
 
 		return unknownCommandText(args[1])
