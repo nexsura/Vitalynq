@@ -143,6 +143,39 @@ Usage: vitalynq observations add --date YYYY-MM-DD "Observation fictive"`
 	}
 }
 
+func TestMissingMeasurementText(t *testing.T) {
+	got := missingMeasurementText()
+	want := `Arguments de mesure manquants.
+
+Usage: vitalynq measurements add indicateur valeur unité contexte méthode source`
+
+	if got != want {
+		t.Fatalf("missingMeasurementText() = %q, want %q", got, want)
+	}
+}
+
+func TestMissingMeasurementDateText(t *testing.T) {
+	got := missingMeasurementDateText()
+	want := `Date ou arguments de mesure manquants.
+
+Usage: vitalynq measurements add --date YYYY-MM-DD indicateur valeur unité contexte méthode source`
+
+	if got != want {
+		t.Fatalf("missingMeasurementDateText() = %q, want %q", got, want)
+	}
+}
+
+func TestInvalidMeasurementValueText(t *testing.T) {
+	got := invalidMeasurementValueText()
+	want := `Valeur de mesure invalide.
+
+La valeur doit être un nombre, par exemple: 72.5`
+
+	if got != want {
+		t.Fatalf("invalidMeasurementValueText() = %q, want %q", got, want)
+	}
+}
+
 func TestOutputForArgsWithoutCommand(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := "Vitalynq organise des données de santé locales."
@@ -633,6 +666,38 @@ func TestMeasurementsAddText(t *testing.T) {
 	}
 }
 
+func TestOutputForArgsMeasurementAddMissingArguments(t *testing.T) {
+	got := outputForArgs(
+		[]string{"vitalynq", "measurements", "add"},
+		NewMemoryObservationStore(),
+		NewMemoryMedicalProfileStore(),
+		NewMemoryMeasurementStore(),
+		NewMemoryAppointmentStore(),
+		defaultDatabasePath,
+	)
+	want := missingMeasurementText()
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsMeasurementAddWithDateMissingArguments(t *testing.T) {
+	got := outputForArgs(
+		[]string{"vitalynq", "measurements", "add", "--date"},
+		NewMemoryObservationStore(),
+		NewMemoryMedicalProfileStore(),
+		NewMemoryMeasurementStore(),
+		NewMemoryAppointmentStore(),
+		defaultDatabasePath,
+	)
+	want := missingMeasurementDateText()
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
 func TestMeasurementsAddTextRejectsMissingUnit(t *testing.T) {
 	store := NewMemoryMeasurementStore()
 
@@ -679,7 +744,7 @@ func TestOutputForArgsMeasurementsAddRejectsInvalidValue(t *testing.T) {
 		NewMemoryAppointmentStore(),
 		defaultDatabasePath,
 	)
-	want := "Valeur de mesure invalide."
+	want := invalidMeasurementValueText()
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)

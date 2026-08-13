@@ -95,6 +95,24 @@ func missingObservationDateText() string {
 Usage: vitalynq observations add --date YYYY-MM-DD "Observation fictive"`
 }
 
+func missingMeasurementText() string {
+	return `Arguments de mesure manquants.
+
+Usage: vitalynq measurements add indicateur valeur unité contexte méthode source`
+}
+
+func missingMeasurementDateText() string {
+	return `Date ou arguments de mesure manquants.
+
+Usage: vitalynq measurements add --date YYYY-MM-DD indicateur valeur unité contexte méthode source`
+}
+
+func invalidMeasurementValueText() string {
+	return `Valeur de mesure invalide.
+
+La valeur doit être un nombre, par exemple: 72.5`
+}
+
 func outputForArgs(args []string, observationStore ObservationStore, profileStore MedicalProfileStore, measurementStore MeasurementStore, appointmentStore AppointmentStore, databasePath string) string {
 	if len(args) <= 1 {
 		return appDescription()
@@ -191,7 +209,7 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		if len(args) > 10 && args[2] == "add" && args[3] == "--date" {
 			value, err := strconv.ParseFloat(args[6], 64)
 			if err != nil {
-				return "Valeur de mesure invalide."
+				return invalidMeasurementValueText()
 			}
 
 			return measurementsAddTextWithDate(
@@ -207,13 +225,13 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		}
 
 		if len(args) > 2 && args[2] == "add" && len(args) > 3 && args[3] == "--date" {
-			return "Date ou arguments de mesure manquants."
+			return missingMeasurementDateText()
 		}
 
 		if len(args) > 8 && args[2] == "add" {
 			value, err := strconv.ParseFloat(args[4], 64)
 			if err != nil {
-				return "Valeur de mesure invalide."
+				return invalidMeasurementValueText()
 			}
 
 			return measurementsAddText(
@@ -228,7 +246,7 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		}
 
 		if len(args) > 2 && args[2] == "add" {
-			return "Arguments de mesure manquants."
+			return missingMeasurementText()
 		}
 
 		return unknownCommandText(args[1])
