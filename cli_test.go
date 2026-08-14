@@ -176,6 +176,17 @@ La valeur doit être un nombre, par exemple: 72.5`
 	}
 }
 
+func TestMissingAppointmentText(t *testing.T) {
+	got := missingAppointmentText()
+	want := `Arguments de rendez-vous manquants.
+
+Usage: vitalynq appointments add YYYY-MM-DD titre catégorie lieu source`
+
+	if got != want {
+		t.Fatalf("missingAppointmentText() = %q, want %q", got, want)
+	}
+}
+
 func TestOutputForArgsWithoutCommand(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := "Vitalynq organise des données de santé locales."
@@ -902,7 +913,7 @@ func TestOutputForArgsAppointmentsAddMissingArguments(t *testing.T) {
 		NewMemoryAppointmentStore(),
 		defaultDatabasePath,
 	)
-	want := "Arguments de rendez-vous manquants."
+	want := missingAppointmentText()
 
 	if got != want {
 		t.Fatalf("outputForArgs() %q, want %q", got, want)

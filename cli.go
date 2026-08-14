@@ -113,6 +113,12 @@ func invalidMeasurementValueText() string {
 La valeur doit être un nombre, par exemple: 72.5`
 }
 
+func missingAppointmentText() string {
+	return `Arguments de rendez-vous manquants.
+
+Usage: vitalynq appointments add YYYY-MM-DD titre catégorie lieu source`
+}
+
 func outputForArgs(args []string, observationStore ObservationStore, profileStore MedicalProfileStore, measurementStore MeasurementStore, appointmentStore AppointmentStore, databasePath string) string {
 	if len(args) <= 1 {
 		return appDescription()
@@ -196,7 +202,7 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		}
 
 		if len(args) > 2 && args[2] == "add" {
-			return "Arguments de rendez-vous manquants."
+			return missingAppointmentText()
 		}
 
 		return unknownCommandText(args[1])
