@@ -187,6 +187,17 @@ Usage: vitalynq appointments add YYYY-MM-DD titre catégorie lieu source`
 	}
 }
 
+func TestMissingMedicalProfileLabelText(t *testing.T) {
+	got := missingMedicalProfileLabelText()
+	want := `Libellé du profil médical manquant.
+
+Usage: vitalynq profile set "Profil fictif"`
+
+	if got != want {
+		t.Fatalf("missingMedicalProfileLabelText() = %q, want %q", got, want)
+	}
+}
+
 func TestOutputForArgsWithoutCommand(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := "Vitalynq organise des données de santé locales."
@@ -591,7 +602,7 @@ func TestOutputForArgsProfilSet(t *testing.T) {
 
 func TestOutputForArgsProfileSetMissingLabel(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "profile", "set"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Libellé du profil médical manquant."
+	want := missingMedicalProfileLabelText()
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)

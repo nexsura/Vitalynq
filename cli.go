@@ -119,6 +119,12 @@ func missingAppointmentText() string {
 Usage: vitalynq appointments add YYYY-MM-DD titre catégorie lieu source`
 }
 
+func missingMedicalProfileLabelText() string {
+	return `Libellé du profil médical manquant.
+
+Usage: vitalynq profile set "Profil fictif"`
+}
+
 func outputForArgs(args []string, observationStore ObservationStore, profileStore MedicalProfileStore, measurementStore MeasurementStore, appointmentStore AppointmentStore, databasePath string) string {
 	if len(args) <= 1 {
 		return appDescription()
@@ -158,7 +164,7 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		}
 
 		if len(args) > 2 && args[2] == "set" {
-			return "Libellé du profil médical manquant."
+			return missingMedicalProfileLabelText()
 		}
 
 		return unknownCommandText(args[1])
