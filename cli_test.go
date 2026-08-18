@@ -121,6 +121,15 @@ func TestUnknownCommandText(t *testing.T) {
 	}
 }
 
+func TestUnknownSubcommandText(t *testing.T) {
+	got := unknownSubcommandText("db", "nope")
+	want := "Sous-commande inconnue: db nope\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles."
+
+	if got != want {
+		t.Fatalf("unknownSubcommandText() = %q, want %q", got, want)
+	}
+}
+
 func TestMissingObservationText(t *testing.T) {
 	got := missingObservationText()
 	want := `Texte d'observation manquant.
@@ -246,6 +255,24 @@ func TestOutputForArgsPrivacy(t *testing.T) {
 func TestOutputForArgsUnknownCommand(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "profil"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := unknownCommandText("profil")
+
+	if got != want {
+		t.Fatalf("outputForArgs() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsUnknownDatabaseSubcommand(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "db", "nope"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	want := unknownSubcommandText("db", "nope")
+
+	if got != want {
+		t.Fatalf("unknownSubcommandText() = %q, want %q", got, want)
+	}
+}
+
+func TestOutputForArgsUnknownObservationsSubcommand(t *testing.T) {
+	got := outputForArgs([]string{"vitalynq", "observations", "nope"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	want := unknownSubcommandText("observations", "nope")
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)

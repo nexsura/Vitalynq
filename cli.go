@@ -83,6 +83,10 @@ func unknownCommandText(command string) string {
 	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
 }
 
+func unknownSubcommandText(command string, subcommand string) string {
+	return fmt.Sprintf("Sous-commande inconnue: %s %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command, subcommand)
+}
+
 func missingObservationText() string {
 	return `Texte d'observation manquant.
 
@@ -153,6 +157,10 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 		if len(args) > 2 && args[2] == "check" {
 			return databaseCheckText()
 		}
+
+		if len(args) > 2 {
+			return unknownSubcommandText(args[1], args[2])
+		}
 		return unknownCommandText(args[1])
 	case "profile":
 		if len(args) > 2 && args[2] == "show" {
@@ -165,6 +173,10 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 
 		if len(args) > 2 && args[2] == "set" {
 			return missingMedicalProfileLabelText()
+		}
+
+		if len(args) > 2 {
+			return unknownSubcommandText(args[1], args[2])
 		}
 
 		return unknownCommandText(args[1])
@@ -189,6 +201,10 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 			return missingObservationText()
 		}
 
+		if len(args) > 2 {
+			return unknownSubcommandText(args[1], args[2])
+		}
+
 		return unknownCommandText(args[1])
 
 	case "appointments":
@@ -209,6 +225,10 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 
 		if len(args) > 2 && args[2] == "add" {
 			return missingAppointmentText()
+		}
+
+		if len(args) > 2 {
+			return unknownSubcommandText(args[1], args[2])
 		}
 
 		return unknownCommandText(args[1])
@@ -259,6 +279,10 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 
 		if len(args) > 2 && args[2] == "add" {
 			return missingMeasurementText()
+		}
+
+		if len(args) > 2 {
+			return unknownSubcommandText(args[1], args[2])
 		}
 
 		return unknownCommandText(args[1])
