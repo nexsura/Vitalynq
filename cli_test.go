@@ -130,6 +130,17 @@ func TestUnknownSubcommandText(t *testing.T) {
 	}
 }
 
+func TestInvalidDateText(t *testing.T) {
+	got := invalidDateText()
+	want := `Date invalide.
+
+Utilisez le format YYYY-MM-DD, par exemple: 2026-07-29`
+
+	if got != want {
+		t.Fatalf("invalidDateText() = %q, want %q", got, want)
+	}
+}
+
 func TestMissingObservationText(t *testing.T) {
 	got := missingObservationText()
 	want := `Texte d'observation manquant.
@@ -527,7 +538,7 @@ func TestOutputForArgsObservationsAddWithInvalidDate(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "29-07-2026", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "date invalide, utilisez YYYY-MM-DD"
+	want := invalidDateText()
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -917,7 +928,7 @@ func TestAppointmentsAddTextRejectsInvalidDate(t *testing.T) {
 		"cabinet fictif",
 		"saisie manuelle",
 	)
-	want := "date invalide, utilisez YYYY-MM-DD"
+	want := invalidDateText()
 
 	if got != want {
 		t.Fatalf("appointmentsAddText() = %q, want %q", got, want)

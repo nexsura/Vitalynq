@@ -87,6 +87,12 @@ func unknownSubcommandText(command string, subcommand string) string {
 	return fmt.Sprintf("Sous-commande inconnue: %s %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command, subcommand)
 }
 
+func invalidDateText() string {
+	return `Date invalide.
+
+Utilisez le format YYYY-MM-DD, par exemple: 2026-07-29`
+}
+
 func missingObservationText() string {
 	return `Texte d'observation manquant.
 
@@ -349,7 +355,7 @@ Schéma SQLite initialisé: oui`
 func parseObservationDate(value string) (time.Time, error) {
 	parsed, err := time.Parse("2006-01-02", value)
 	if err != nil {
-		return time.Time{}, fmt.Errorf("date invalide, utilisez YYYY-MM-DD")
+		return time.Time{}, fmt.Errorf("%s", invalidDateText())
 	}
 
 	return parsed, nil
