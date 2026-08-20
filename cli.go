@@ -306,10 +306,10 @@ func outputForArgs(args []string, observationStore ObservationStore, profileStor
 func observationsListText(store ObservationStore) string {
 	observations, err := store.List()
 	if err != nil {
-		return fmt.Sprintf("Impossible de lister les observations: %v", err)
+		return fmt.Sprintf("Unable to list observations: %v", err)
 	}
 	if len(observations) == 0 {
-		return "Aucune observation enregistrée."
+		return "No observations recorded."
 	}
 
 	var builder strings.Builder
@@ -323,17 +323,17 @@ func observationsListText(store ObservationStore) string {
 }
 
 func observationsAddText(store ObservationStore, text string) string {
-	observation, err := newObservation(time.Now().UTC(), text, "saisie manuelle")
+	observation, err := newObservation(time.Now().UTC(), text, "manual entry")
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter l'observation: %v", err)
+		return fmt.Sprintf("Unable to add observation: %v", err)
 	}
 
 	saved, err := store.Save(observation)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter l'observation: %v", err)
+		return fmt.Sprintf("Unable to add observation: %v", err)
 	}
 
-	return fmt.Sprintf("Observation #%d ajoutée.", saved.ID)
+	return fmt.Sprintf("Observation #%d added.", saved.ID)
 }
 
 func databasePathText(databasePath string) string {
@@ -367,17 +367,17 @@ func observationsAddTextWithDate(store ObservationStore, dateValue string, text 
 		return err.Error()
 	}
 
-	observation, err := newObservation(occurredAt, text, "saisie manuelle")
+	observation, err := newObservation(occurredAt, text, "manual entry")
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter l'observation: %v", err)
+		return fmt.Sprintf("Unable to add observation: %v", err)
 	}
 
 	saved, err := store.Save(observation)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter l'observation: %v", err)
+		return fmt.Sprintf("Unable to add observation: %v", err)
 	}
 
-	return fmt.Sprintf("Observation #%d ajoutée.", saved.ID)
+	return fmt.Sprintf("Observation #%d added.", saved.ID)
 }
 
 func medicalProfileText(store MedicalProfileStore) string {

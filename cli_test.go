@@ -294,7 +294,7 @@ func TestObservationsListTextWithoutObservations(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := observationsListText(store)
-	want := "Aucune observation enregistrée."
+	want := "No observations recorded."
 
 	if got != want {
 		t.Fatalf("observationsListText() = %q, want %q", got, want)
@@ -303,7 +303,7 @@ func TestObservationsListTextWithoutObservations(t *testing.T) {
 
 func TestOutputForArgsObservationsList(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "observations", "list"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Aucune observation enregistrée."
+	want := "No observations recorded."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -330,7 +330,7 @@ func TestObservationsAddText(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := observationsAddText(store, "Observation fictive de test")
-	want := "Observation #1 ajoutée."
+	want := "Observation #1 added."
 
 	if got != want {
 		t.Fatalf("observationsAddText() = %q, want %q", got, want)
@@ -353,7 +353,7 @@ func TestOutputForArgsObservationsAdd(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := outputForArgs([]string{"vitalynq", "observations", "add", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Observation #1 ajoutée."
+	want := "Observation #1 added."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -373,7 +373,7 @@ func TestOutputForArgsObservationsAddMissingText(t *testing.T) {
 
 func TestOutputForArgsObsList(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "obs", "list"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Aucune observation enregistrée."
+	want := "No observations recorded."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -384,7 +384,7 @@ func TestOutputForArgsObsAdd(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := outputForArgs([]string{"vitalynq", "obs", "add", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Observation #1 ajoutée."
+	want := "Observation #1 added."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -476,7 +476,7 @@ func TestObservationsAddTextWithDate(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := observationsAddTextWithDate(store, "2026-07-29", "Observation fictive de test")
-	want := "Observation #1 ajoutée."
+	want := "Observation #1 added."
 
 	if got != want {
 		t.Fatalf("observationAddTextWithDate() = %q, want %q", got, want)
@@ -501,7 +501,7 @@ func TestOutputForArgsObservationsAddWithDate(t *testing.T) {
 	store := NewMemoryObservationStore()
 
 	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Observation #1 ajoutée."
+	want := "Observation #1 added."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
