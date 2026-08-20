@@ -11,8 +11,8 @@ func TestMemoryObservationStoreSavesObservationWithID(t *testing.T) {
 	observation := Observation{
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
-		Text:       "Observation fictive de test",
-		Source:     "saisie manuelle",
+		Text:       "Fictive test observation",
+		Source:     "manual entry",
 	}
 
 	saved, err := store.Save(observation)
@@ -28,8 +28,8 @@ func TestMemoryObservationStoreSavesObservationWithID(t *testing.T) {
 func TestMemoryObservationStoreIncrementsIDs(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	first := validStoreObservation("Première observation fictive")
-	second := validStoreObservation("Deuxième observation fictive")
+	first := validStoreObservation("First fictive observation")
+	second := validStoreObservation("Second fictive observation")
 
 	savedFirst, err := store.Save(first)
 	if err != nil {
@@ -56,8 +56,8 @@ func TestMemoryObservationStoreRejectsInvalidObservation(t *testing.T) {
 	observation := Observation{
 		OccurredAt: time.Time{},
 		CreatedAt:  testTime(),
-		Text:       "Observation fictive de test",
-		Source:     "saisie manuelle",
+		Text:       "Fictive test observation",
+		Source:     "manual entry",
 	}
 
 	if _, err := store.Save(observation); err == nil {
@@ -68,8 +68,8 @@ func TestMemoryObservationStoreRejectsInvalidObservation(t *testing.T) {
 func TestMemoryObservationStoreListsSavedObservations(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	first := validStoreObservation("Première observation fictive")
-	second := validStoreObservation("Deuxième observation fictive")
+	first := validStoreObservation("First fictive observation")
+	second := validStoreObservation("Second fictive observation")
 
 	if _, err := store.Save(first); err != nil {
 		t.Fatalf("Save(first) error = %v, want nil", err)
@@ -100,7 +100,7 @@ func TestMemoryObservationStoreListsSavedObservations(t *testing.T) {
 func TestMemoryObservationStoreListReturnsCopy(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	if _, err := store.Save(validStoreObservation("Observation fictive de test")); err != nil {
+	if _, err := store.Save(validStoreObservation("Fictive test observation")); err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
 
@@ -108,15 +108,15 @@ func TestMemoryObservationStoreListReturnsCopy(t *testing.T) {
 	if err != nil {
 		t.Fatalf("List() error = %v, want nil", err)
 	}
-	observations[0].Text = "Texte modifié hors du store"
+	observations[0].Text = "Text changed outside the store"
 
 	observationsAgain, err := store.List()
 	if err != nil {
 		t.Fatalf("List() error = %v, want nil", err)
 	}
 
-	if observationsAgain[0].Text != "Observation fictive de test" {
-		t.Fatalf("stored Text = %q, want %q", observationsAgain[0].Text, "Observation fictive de test")
+	if observationsAgain[0].Text != "Fictive test observation" {
+		t.Fatalf("stored Text = %q, want %q", observationsAgain[0].Text, "Fictive test observation")
 	}
 }
 
@@ -125,6 +125,6 @@ func validStoreObservation(text string) Observation {
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
 		Text:       text,
-		Source:     "saisie manuelle",
+		Source:     "manual entry",
 	}
 }

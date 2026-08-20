@@ -11,11 +11,11 @@ func TestBuildExportSnapshot(t *testing.T) {
 	measurementStore := NewMemoryMeasurementStore()
 	appointmentStore := NewMemoryAppointmentStore()
 
-	if _, err := profileStore.Save(validMedicalProfile("Profil fictif de test")); err != nil {
+	if _, err := profileStore.Save(validMedicalProfile("Fictive test profile")); err != nil {
 		t.Fatalf("Save(profile) error = %v, want nil", err)
 	}
 
-	if _, err := observationStore.Save(validStoreObservation("Observation fictive")); err != nil {
+	if _, err := observationStore.Save(validStoreObservation("Fictive observation")); err != nil {
 		t.Fatalf("Save(observation) error = %v, want nil", err)
 	}
 
@@ -56,7 +56,7 @@ func TestBuildExportSnapshot(t *testing.T) {
 func TestExportSnapshotJSON(t *testing.T) {
 	snapshot := ExportSnapshot{
 		ExportVersion: exportVersion,
-		Observations:  []Observation{validStoreObservation("Observation fictive")},
+		Observations:  []Observation{validStoreObservation("Fictive observation")},
 		Measurements:  []Measurement{validMeasurement()},
 		Appointments:  []Appointment{validAppointment()},
 	}

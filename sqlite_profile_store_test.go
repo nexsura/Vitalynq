@@ -45,7 +45,7 @@ func TestSQLiteMedicalProfileStoreSavesProfile(t *testing.T) {
 	db, store := newTestSQLiteMedicalProfileStore(t)
 	defer db.Close()
 
-	profile := validMedicalProfile("Profile fictif de test")
+	profile := validMedicalProfile("Fictive test profile")
 
 	saved, err := store.Save(profile)
 	if err != nil {
@@ -85,7 +85,7 @@ func TestSQLiteMedicalProfileStoreGetSavedProfile(t *testing.T) {
 	db, store := newTestSQLiteMedicalProfileStore(t)
 	defer db.Close()
 
-	saved, err := store.Save(validMedicalProfile("Profil fictif de test"))
+	saved, err := store.Save(validMedicalProfile("Fictive test profile"))
 	if err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
@@ -103,7 +103,7 @@ func TestSQLiteMedicalProfileStoreGetSavedProfile(t *testing.T) {
 		t.Fatalf("ID = %d, want %d", got.ID, saved.ID)
 	}
 
-	if got.Label != "Profil fictif de test" {
-		t.Fatalf("Label = %q, want %q", got.Label, "Profil fictif de test")
+	if got.Label != "Fictive test profile" {
+		t.Fatalf("Label = %q, want %q", got.Label, "Fictive test profile")
 	}
 }

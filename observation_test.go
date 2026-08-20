@@ -9,8 +9,8 @@ func TestValidateObservationAcceptsValidObservation(t *testing.T) {
 	observation := Observation{
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
-		Text:       "Observation fictive de test",
-		Source:     "saisie manuelle",
+		Text:       "Fictive test observation",
+		Source:     "manual entry",
 	}
 
 	if err := validateObservation(observation); err != nil {
@@ -21,8 +21,8 @@ func TestValidateObservationAcceptsValidObservation(t *testing.T) {
 func TestValidateObservationRejectsMissingDate(t *testing.T) {
 	observation := Observation{
 		CreatedAt: testTime(),
-		Text:      "Observation fictive de test",
-		Source:    "saisie manuelle",
+		Text:      "Fictive test observation",
+		Source:    "manual entry",
 	}
 
 	if err := validateObservation(observation); err == nil {
@@ -35,7 +35,7 @@ func TestValidateObservationRejectsEmptyText(t *testing.T) {
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
 		Text:       "",
-		Source:     "saisie manuelle",
+		Source:     "manual entry",
 	}
 
 	if err := validateObservation(observation); err == nil {
@@ -48,7 +48,7 @@ func TestValidateObservationRejectsBlankText(t *testing.T) {
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
 		Text:       " ",
-		Source:     "saisie manuelle",
+		Source:     "manual entry",
 	}
 
 	if err := validateObservation(observation); err == nil {
@@ -60,7 +60,7 @@ func TestValidateObservationRejectsEmptySource(t *testing.T) {
 	observation := Observation{
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
-		Text:       "Observation fictive de test",
+		Text:       "Fictive test observation",
 		Source:     "",
 	}
 
@@ -73,7 +73,7 @@ func TestValidateObservationRejectsBlankSource(t *testing.T) {
 	observation := Observation{
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
-		Text:       "Observation fictive de test",
+		Text:       "Fictive test observation",
 		Source:     "   ",
 	}
 
@@ -85,7 +85,7 @@ func TestValidateObservationRejectsBlankSource(t *testing.T) {
 func TestNewObservationCreatesValidObservation(t *testing.T) {
 	occurredAt := testTime()
 
-	observation, err := newObservation(occurredAt, " Observation fictive de test ", " saisie manuelle ")
+	observation, err := newObservation(occurredAt, " Fictive test observation ", " manual entry ")
 	if err != nil {
 		t.Fatalf("newObservation() error = %v, want nil", err)
 	}
@@ -94,12 +94,12 @@ func TestNewObservationCreatesValidObservation(t *testing.T) {
 		t.Fatalf("OccurredAt = %v, want %v", observation.OccurredAt, occurredAt)
 	}
 
-	if observation.Text != "Observation fictive de test" {
-		t.Fatalf("Text = %q, want %q", observation.Text, "Observation fictive de test")
+	if observation.Text != "Fictive test observation" {
+		t.Fatalf("Text = %q, want %q", observation.Text, "Fictive test observation")
 	}
 
-	if observation.Source != "saisie manuelle" {
-		t.Fatalf("Source = %q, want %q", observation.Source, "saisie manuelle")
+	if observation.Source != "manual entry" {
+		t.Fatalf("Source = %q, want %q", observation.Source, "manual entry")
 	}
 
 	if observation.ID != 0 {
@@ -112,7 +112,7 @@ func TestNewObservationCreatesValidObservation(t *testing.T) {
 }
 
 func TestNewObservationRejectsInvalidObservation(t *testing.T) {
-	_, err := newObservation(time.Time{}, "Observation fictive de test", "saisie manuelle")
+	_, err := newObservation(time.Time{}, "Fictive test observation", "manual entry")
 	if err == nil {
 		t.Fatalf("newObservation() error = nil, want error")
 	}
@@ -125,8 +125,8 @@ func testTime() time.Time {
 func TestValidateObservationRejectsMissingCreationDate(t *testing.T) {
 	observation := Observation{
 		OccurredAt: testTime(),
-		Text:       "Observation fictive de test",
-		Source:     "saisie manuelle",
+		Text:       "Fictive test observation",
+		Source:     "manual entry",
 	}
 
 	if err := validateObservation(observation); err == nil {

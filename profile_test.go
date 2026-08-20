@@ -8,7 +8,7 @@ func TestValidateMedicalProfileAcceptsValidProfile(t *testing.T) {
 	profile := MedicalProfile{
 		CreatedAt: testTime(),
 		UpdatedAt: testTime(),
-		Label:     "Profile fictif de test",
+		Label:     "Fictive test profile",
 	}
 
 	if err := validateMedicalProfile(profile); err != nil {
@@ -19,7 +19,7 @@ func TestValidateMedicalProfileAcceptsValidProfile(t *testing.T) {
 func TestValidateMedicalProfileRejectsMissingCreatedAt(t *testing.T) {
 	profile := MedicalProfile{
 		UpdatedAt: testTime(),
-		Label:     "Profile fictif de test",
+		Label:     "Fictive test profile",
 	}
 
 	if err := validateMedicalProfile(profile); err == nil {
@@ -30,7 +30,7 @@ func TestValidateMedicalProfileRejectsMissingCreatedAt(t *testing.T) {
 func TestValidateMedicalProfileRejectsMissingUpdatedAt(t *testing.T) {
 	profile := MedicalProfile{
 		CreatedAt: testTime(),
-		Label:     "Profile fictif de test",
+		Label:     "Fictive test profile",
 	}
 
 	if err := validateMedicalProfile(profile); err == nil {
@@ -51,13 +51,13 @@ func TestValidateMedicalProfileRejectsBlankLabel(t *testing.T) {
 }
 
 func TestNewMedicalProfileCreatesValidProfile(t *testing.T) {
-	profile, err := newMedicalProfile("Profile fictif de test")
+	profile, err := newMedicalProfile("Fictive test profile")
 	if err != nil {
 		t.Fatalf("newMedicalProfile() error = %v, want nil", err)
 	}
 
-	if profile.Label != "Profile fictif de test" {
-		t.Fatalf("Label = %q, want %q", profile.Label, "Profile fictif de test")
+	if profile.Label != "Fictive test profile" {
+		t.Fatalf("Label = %q, want %q", profile.Label, "Fictive test profile")
 	}
 
 	if profile.CreatedAt.IsZero() {

@@ -101,8 +101,8 @@ func TestSQLiteMeasurementStoreListsSavedMeasurements(t *testing.T) {
 		t.Fatalf("second ID = %d, want %d", measurements[1].ID, second.ID)
 	}
 
-	if measurements[0].Indicator != "poids" {
-		t.Fatalf("first indicator = %q, want %q", measurements[0].Indicator, "poids")
+	if measurements[0].Indicator != "weight" {
+		t.Fatalf("first indicator = %q, want %q", measurements[0].Indicator, "weight")
 	}
 
 	if measurements[1].Indicator != "taille" {

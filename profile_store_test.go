@@ -7,7 +7,7 @@ import (
 func TestMemoryProfileStoreSavesProfileWithID(t *testing.T) {
 	store := NewMemoryMedicalProfileStore()
 
-	saved, err := store.Save(validMedicalProfile("Profil fictif de test"))
+	saved, err := store.Save(validMedicalProfile("Fictive test profile"))
 	if err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
@@ -42,7 +42,7 @@ func TestMemoryMedicalProfileStoreGetWithoutProfile(t *testing.T) {
 func TestMemoryMedicalProfileStoreGetSavedProfile(t *testing.T) {
 	store := NewMemoryMedicalProfileStore()
 
-	saved, err := store.Save(validMedicalProfile("Profile fictif de test"))
+	saved, err := store.Save(validMedicalProfile("Fictive test profile"))
 	if err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
@@ -60,8 +60,8 @@ func TestMemoryMedicalProfileStoreGetSavedProfile(t *testing.T) {
 		t.Fatalf("ID = %d, want %d", got.ID, saved.ID)
 	}
 
-	if got.Label != "Profile fictif de test" {
-		t.Fatalf("Label = %q, want %q", got.Label, "Profile fictif de test")
+	if got.Label != "Fictive test profile" {
+		t.Fatalf("Label = %q, want %q", got.Label, "Fictive test profile")
 	}
 }
 

@@ -44,7 +44,7 @@ func TestSQLiteObservationStoreSavesObservation(t *testing.T) {
 	db, store := newTestSQLiteObservationStore(t)
 	defer db.Close()
 
-	observation := validStoreObservation("Observation fictive de test")
+	observation := validStoreObservation("Fictive test observation")
 
 	saved, err := store.Save(observation)
 	if err != nil {
@@ -64,7 +64,7 @@ func TestSQLiteObservationStoreRejectsInvalidObservation(t *testing.T) {
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
 		Text:       "",
-		Source:     "saisie manuelle",
+		Source:     "manual entry",
 	}
 
 	if _, err := store.Save(observation); err == nil {
@@ -76,12 +76,12 @@ func TestSQLiteObservationStoreListsSavedObservations(t *testing.T) {
 	db, store := newTestSQLiteObservationStore(t)
 	defer db.Close()
 
-	first, err := store.Save(validStoreObservation("Première observation fictive"))
+	first, err := store.Save(validStoreObservation("First fictive observation"))
 	if err != nil {
 		t.Fatalf("Save(first) error = %v, want nil", err)
 	}
 
-	second, err := store.Save(validStoreObservation("Deuxième observation fictive"))
+	second, err := store.Save(validStoreObservation("Second fictive observation"))
 	if err != nil {
 		t.Fatalf("Save(second) error = %v, want nil", err)
 	}
@@ -103,11 +103,11 @@ func TestSQLiteObservationStoreListsSavedObservations(t *testing.T) {
 		t.Fatalf("second ID = %d, want %d", observations[1].ID, second.ID)
 	}
 
-	if observations[0].Text != "Première observation fictive" {
-		t.Fatalf("first Text = %q, want %q", observations[0].Text, "Première observation fictive")
+	if observations[0].Text != "First fictive observation" {
+		t.Fatalf("first Text = %q, want %q", observations[0].Text, "First fictive observation")
 	}
 
-	if observations[1].Text != "Deuxième observation fictive" {
-		t.Fatalf("second Text = %q, want %q", observations[1].Text, "Deuxième observation fictive")
+	if observations[1].Text != "Second fictive observation" {
+		t.Fatalf("second Text = %q, want %q", observations[1].Text, "Second fictive observation")
 	}
 }

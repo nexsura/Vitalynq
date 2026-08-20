@@ -75,7 +75,7 @@ func TestSQLiteAppointmentStoreListsSavedAppointments(t *testing.T) {
 	}
 
 	secondAppointment := validAppointment()
-	secondAppointment.Title = "Examen fictif"
+	secondAppointment.Title = "Fictive exam"
 
 	second, err := store.Save(secondAppointment)
 	if err != nil {
@@ -99,11 +99,11 @@ func TestSQLiteAppointmentStoreListsSavedAppointments(t *testing.T) {
 		t.Fatalf("second ID = %d, want %d", appointments[1].ID, second.ID)
 	}
 
-	if appointments[0].Title != "consultation fictive" {
-		t.Fatalf("first Title = %q, want %q", appointments[0].Title, "consultation fictive")
+	if appointments[0].Title != "fictive consultation" {
+		t.Fatalf("first Title = %q, want %q", appointments[0].Title, "fictive consultation")
 	}
 
-	if appointments[1].Title != "Examen fictif" {
-		t.Fatalf("second Title = %q, want %q", appointments[1].Title, "Examen fictif")
+	if appointments[1].Title != "Fictive exam" {
+		t.Fatalf("second Title = %q, want %q", appointments[1].Title, "Fictive exam")
 	}
 }

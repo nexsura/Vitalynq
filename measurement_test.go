@@ -71,32 +71,32 @@ func validMeasurement() Measurement {
 	return Measurement{
 		OccurredAt: testTime(),
 		CreatedAt:  testTime(),
-		Indicator:  "poids",
+		Indicator:  "weight",
 		Value:      72.5,
 		Unit:       "kg",
-		Context:    "test fictif",
-		Method:     "saisie manuelle",
-		Source:     "saisie manuelle",
+		Context:    "fictive test",
+		Method:     "manual entry",
+		Source:     "manual entry",
 	}
 }
 
 func TestNewMeasurementCreatesValidMeasurement(t *testing.T) {
 	measurement, err := newMeasurement(
 		testTime(),
-		" poids ",
+		" weight ",
 		72.5,
 		" kg ",
-		" test fictif ",
-		" saisie manuelle ",
-		" saisie manuelle ",
+		" fictive test ",
+		" manual entry ",
+		" manual entry ",
 	)
 
 	if err != nil {
 		t.Fatalf("newMeasurement() error = %v, want nil", err)
 	}
 
-	if measurement.Indicator != "poids" {
-		t.Fatalf("Indicator = %q, want %q", measurement.Indicator, "poids")
+	if measurement.Indicator != "weight" {
+		t.Fatalf("Indicator = %q, want %q", measurement.Indicator, "weight")
 	}
 
 	if measurement.Unit != "kg" {
@@ -113,7 +113,7 @@ func TestNewMeasurementCreatesValidMeasurement(t *testing.T) {
 }
 
 func TestNewMeasurementRejectsInvalidMeasurement(t *testing.T) {
-	_, err := newMeasurement(testTime(), "", 72.5, "kg", "test fictif", "saisie manuelle", "saisie manuelle")
+	_, err := newMeasurement(testTime(), "", 72.5, "kg", "fictive test", "manual entry", "manual entry")
 	if err == nil {
 		t.Fatalf("newMeasurement() error = nil, want error")
 	}

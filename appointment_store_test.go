@@ -35,7 +35,7 @@ func TestMemoryAppointmentStoreListsSavedAppointments(t *testing.T) {
 	}
 
 	secondAppointment := validAppointment()
-	secondAppointment.Title = "Examen fictif"
+	secondAppointment.Title = "Fictive exam"
 
 	second, err := store.Save(secondAppointment)
 	if err != nil {

@@ -49,17 +49,17 @@ func TestValidateAppointmentRejectsMissingSource(t *testing.T) {
 }
 
 func TestNewAppointmentCreatesValidAppointment(t *testing.T) {
-	appointment, err := newAppointment(testTime(), "consultation fictive", "rendez-vous", "cabinet fictif", "saisie manuelle")
+	appointment, err := newAppointment(testTime(), "fictive consultation", "appointment", "fictive office", "manual entry")
 	if err != nil {
 		t.Fatalf("newAppointment() error = %v, want nil", err)
 	}
 
-	if appointment.Title != "consultation fictive" {
-		t.Fatalf("Title = %q, want %q", appointment.Title, "consultation fictive")
+	if appointment.Title != "fictive consultation" {
+		t.Fatalf("Title = %q, want %q", appointment.Title, "fictive consultation")
 	}
 
-	if appointment.Category != "rendez-vous" {
-		t.Fatalf("Category = %q, want %q", appointment.Category, "rendez-vous")
+	if appointment.Category != "appointment" {
+		t.Fatalf("Category = %q, want %q", appointment.Category, "appointment")
 	}
 
 	if appointment.CreatedAt.IsZero() {
@@ -71,9 +71,9 @@ func validAppointment() Appointment {
 	return Appointment{
 		ScheduledAt: testTime(),
 		CreatedAt:   testTime(),
-		Title:       "consultation fictive",
-		Category:    "rendez-vous",
-		Location:    "cabinet fictif",
-		Source:      "saisie manuelle",
+		Title:       "fictive consultation",
+		Category:    "appointment",
+		Location:    "fictive office",
+		Source:      "manual entry",
 	}
 }

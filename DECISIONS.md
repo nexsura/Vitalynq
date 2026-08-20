@@ -1,18 +1,18 @@
-# Décisions techniques
+# Technical Decisions
 
 ## SQLite
 
-Vitalynq utilisera SQLite pour stocker les données localement.
+Vitalynq will use SQLite to store data locally.
 
-Raisons :
+Reasons:
 
-- stockage local adapté à une application CLI mono-utilisateur ;
-- fichier unique facile à sauvegarder ;
-- pas de serveur à administrer ;
-- bon support des transactions.
+- local storage suited to a single-user CLI application;
+- a single file that is easy to back up;
+- no server to administer;
+- good transaction support.
 
-Le code utilisera `database/sql` pour rester proche de la bibliothèque standard.
+The code will use `database/sql` to stay close to the standard library.
 
-Le driver SQLite prévu est `modernc.org/sqlite`, car il fonctionne sans CGO et simplifie l'installation locale.
+The planned SQLite driver is `modernc.org/sqlite` because it works without CGO and simplifies local installation.
 
-Cette décision pourra être réévaluée si une contrainte technique concrète apparaît.
+This decision can be revisited if a concrete technical constraint appears.

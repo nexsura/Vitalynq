@@ -1,16 +1,16 @@
 # Vitalynq
 
-Vitalynq est une application CLI locale en cours de construction pour organiser des données personnelles de santé.
+Vitalynq is a local CLI application under construction for organizing personal health data.
 
-Elle organise des données. Elle ne pose pas de diagnostic, ne recommande pas de traitement et ne remplace pas un professionnel de santé.
+It organizes data. It does not provide diagnosis, recommend treatments, or replace a healthcare professional.
 
-## Exécution
+## Running
 
 ```sh
 go run .
 ```
 
-## Commandes disponibles
+## Available Commands
 
 ```sh
 go run . help
@@ -20,8 +20,8 @@ go run . privacy
 go run . limitations
 go run . observations list
 go run . obs list
-go run . observations add "Observation fictive"
-go run . obs add "Observation fictive"
+go run . observations add "Fictive observation"
+go run . obs add "Fictive observation"
 go run . --db test.db observations list
 go run . db path
 go run . --db test.db db path
@@ -29,28 +29,28 @@ go run . db info
 go run . --db test.db db info
 go run . db check
 go run . --db test.db db check
-go run . observations add --date 2026-07-29 "Observation fictive"
-go run . profile set "Profil fictif"
+go run . observations add --date 2026-07-29 "Fictive observation"
+go run . profile set "Fictive profile"
 go run . profile show
 go run . measurements list
-go run . measurements add poids 72.5 kg "test fictif" "saisie manuelle" "saisie manuelle"
-go run . measurements add --date 2026-07-29 poids 72.5 kg "test fictif" "saisie manuelle" "saisie manuelle"
+go run . measurements add weight 72.5 kg "fictive test" "manual entry" "manual entry"
+go run . measurements add --date 2026-07-29 weight 72.5 kg "fictive test" "manual entry" "manual entry"
 go run . appointments list
-go run . appointments add 2026-07-29 "consultation fictive" rendez-vous "cabinet fictif" "saisie manuelle"
+go run . appointments add 2026-07-29 "fictive consultation" appointment "fictive office" "manual entry"
 go run . summary
 go run . export
 ```
 
-Les observations sont actuellement stockées dans un fichier SQLite local `vitalynq.db`.
-L'option `--db` permet de choisir un autre fichier SQLite local.
+Observations are currently stored in a local SQLite file named `vitalynq.db`.
+The `--db` option can select another local SQLite file.
 
-La commande `export` affiche les données locales au format JSON dans le terminal. Elle n'envoie aucune donnée vers un serveur, un cloud ou un service externe.
+The `export` command prints local data as JSON in the terminal. It does not send data to a server, cloud service, or external service.
 
-La commande `privacy` affiche les garanties et limites de confidentialité de Vitalynq : stockage local, absence de cloud, absence de télémétrie et responsabilité de protéger les fichiers locaux.
+The `privacy` command shows Vitalynq privacy guarantees and limits: local storage, no cloud, no telemetry, and the user's responsibility to protect local files.
 
-La commande `limitations` affiche les limites fonctionnelles de Vitalynq : organisation de données uniquement, sans diagnostic, sans recommandation de traitement, sans prédiction et sans remplacement d'un professionnel de santé.
+The `limitations` command shows Vitalynq functional limits: data organization only, no diagnosis, no treatment recommendation, no prediction, and no replacement for a healthcare professional.
 
-## Vérification
+## Verification
 
 ```sh
 go fmt ./...
