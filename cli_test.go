@@ -8,7 +8,7 @@ import (
 
 func TestAppDescription(t *testing.T) {
 	got := appDescription()
-	want := "Vitalynq organise des données de santé locales."
+	want := "Vitalynq organizes local health data."
 
 	if got != want {
 		t.Fatalf("appDescription() = %q, want %q", got, want)
@@ -19,32 +19,32 @@ func TestHelpText(t *testing.T) {
 	got := helpText()
 	want := `Vitalynq
 
-Commandes:
-  help               Affiche cette aide
-  version            Affiche la version
-  about              Affiche le périmètre actuel
-  privacy            Affiche les informations de confidentialité
-  limitations        Affiche les limites de Vitalynq
-  profile set        Enregistre le profil médical
-  profile show       Affiche le profil médical
-  observations list  Liste les observations
-  obs list           Alias de observations list
-  observations add   Ajoute une observation
-  observations add --date YYYY-MM-DD
-                     Ajoute une observation datée
-  db path            Affiche le chemin de la base SQLite
-  db info            Affiche les informations de stockage local
-  db check           Vérifie l'accès au stockage local
-  measurements list  Liste les mesures
-  measurements add   Ajoute une mesure
-  measurements add --date YYYY-MM-DD
-                     Ajoute une mesure datée
-  appointments list  Liste les rendez-vous
-  appointments add   Ajoute un rendez-vous
-  summary            Affiche un bilan synthétique
-  export             Exporte les données locales en JSON
+  Commands:
+    help               Show this help
+    version            Show the version
+    about              Show the current scope
+    privacy            Show privacy information
+    limitations        Show Vitalynq limitations
+    profile set        Save the medical profile
+    profile show       Show the medical profile
+    observations list  List observations
+    obs list           Alias for observations list
+    observations add   Add an observation
+    observations add --date YYYY-MM-DD
+                       Add a dated observation
+    db path            Show the SQLite database path
+    db info            Show local storage information
+    db check           Check local storage access
+    measurements list  List measurements
+    measurements add   Add a measurement
+    measurements add --date YYYY-MM-DD
+                       Add a dated measurement
+    appointments list  List appointments
+    appointments add   Add an appointment
+    summary            Show a summary
+    export             Export local data as JSON
 
-Vitalynq organise des données. Il ne pose pas de diagnostic.`
+  Vitalynq organizes data. It does not provide diagnosis.`
 
 	if got != want {
 		t.Fatalf("helpText() = %q, want %q", got, want)
@@ -53,15 +53,15 @@ Vitalynq organise des données. Il ne pose pas de diagnostic.`
 
 func TestAboutText(t *testing.T) {
 	got := aboutText()
-	want := `Vitalynq est une application CLI locale pour organiser des données personnelles de santé.
+	want := `Vitalynq is a local CLI application for organizing personal health data.
 
-Périmètre actuel:
-	local
-	mono-utilisateur
-	sans cloud
-	sans télémétrie
+  Current scope:
+  local
+  single-user
+  no cloud
+  no telemetry
 
-Vitalynq ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
+  Vitalynq does not provide diagnosis and does not replace a healthcare professional.`
 
 	if got != want {
 		t.Fatalf("aboutText() = %q, want %q", got, want)
@@ -70,16 +70,16 @@ Vitalynq ne pose pas de diagnostic et ne remplace pas un professionnel de santé
 
 func TestPrivacyText(t *testing.T) {
 	got := privacyText()
-	want := `Confidentialité Vitalynq
+	want := `Vitalynq Privacy
 
-Vitalynq stocke les données localement dans un fichier SQLite.
-Vitalynq n'envoie aucune donnée vers un serveur, un cloud ou une API externe.
-Vitalynq n'utilise pas de télémétrie.
+  Vitalynq stores data locally in a SQLite file.
+  Vitalynq does not send data to a server, cloud service, or external API.
+  Vitalynq does not use telemetry.
 
-Les exports JSON sont affichés localement dans le terminal.
-L'utilisateur reste responsable de la protection du fichier SQLite et des exports.
+  JSON exports are displayed locally in the terminal.
+  The user is responsible for protecting the SQLite file and exports.
 
-Vitalynq organise des données. Il ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
+  Vitalynq organizes data. It does not provide diagnosis and does not replace a healthcare professional.`
 
 	if got != want {
 		t.Fatalf("privacyText() = %q, want %q", got, want)
@@ -88,15 +88,15 @@ Vitalynq organise des données. Il ne pose pas de diagnostic et ne remplace pas 
 
 func TestLimitationsText(t *testing.T) {
 	got := limitationsText()
-	want := `Limites de Vitalynq
+	want := `Vitalynq Limitations
 
-Vitalynq organise des données personnelles de santé.
-Vitalynq ne pose pas de diagnostic.
-Vitalynq ne recommande aucun traitement.
-Vitalynq ne prédit pas l'évolution d'un état de santé.
-Vitalynq ne remplace pas un professionnel de santé.
+  Vitalynq organizes personal health data.
+  Vitalynq does not provide diagnosis.
+  Vitalynq does not recommend treatments.
+  Vitalynq does not predict health changes.
+  Vitalynq does not replace a healthcare professional.
 
-En cas de question médicale, contactez un professionnel de santé qualifié.`
+  For medical questions, contact a qualified healthcare professional.`
 
 	if got != want {
 		t.Fatalf("limitationsText() = %q, want %q", got, want)
@@ -114,7 +114,7 @@ func TestOutputForArgsLimitations(t *testing.T) {
 
 func TestUnknownCommandText(t *testing.T) {
 	got := unknownCommandText("profil")
-	want := "Commande inconnue: profil\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles."
+	want := "Unknown command: profil\n\nUse 'vitalynq help' to see available commands."
 
 	if got != want {
 		t.Fatalf("unknownCommandText() = %q, want %q", got, want)
@@ -123,7 +123,7 @@ func TestUnknownCommandText(t *testing.T) {
 
 func TestUnknownSubcommandText(t *testing.T) {
 	got := unknownSubcommandText("db", "nope")
-	want := "Sous-commande inconnue: db nope\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles."
+	want := "Unknown subcommand: db nope\n\nUse 'vitalynq help' to see available commands."
 
 	if got != want {
 		t.Fatalf("unknownSubcommandText() = %q, want %q", got, want)
@@ -220,7 +220,7 @@ Usage: vitalynq profile set "Profil fictif"`
 
 func TestOutputForArgsWithoutCommand(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Vitalynq organise des données de santé locales."
+	want := "Vitalynq organizes local health data."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)

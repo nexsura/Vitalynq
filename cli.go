@@ -8,83 +8,83 @@ import (
 )
 
 func appDescription() string {
-	return "Vitalynq organise des données de santé locales."
+	return "Vitalynq organizes local health data."
 }
 
 func helpText() string {
 	return `Vitalynq
 
-Commandes:
-  help               Affiche cette aide
-  version            Affiche la version
-  about              Affiche le périmètre actuel
-  privacy            Affiche les informations de confidentialité
-  limitations        Affiche les limites de Vitalynq
-  profile set        Enregistre le profil médical
-  profile show       Affiche le profil médical
-  observations list  Liste les observations
-  obs list           Alias de observations list
-  observations add   Ajoute une observation
-  observations add --date YYYY-MM-DD
-                     Ajoute une observation datée
-  db path            Affiche le chemin de la base SQLite
-  db info            Affiche les informations de stockage local
-  db check           Vérifie l'accès au stockage local
-  measurements list  Liste les mesures
-  measurements add   Ajoute une mesure
-  measurements add --date YYYY-MM-DD
-                     Ajoute une mesure datée
-  appointments list  Liste les rendez-vous
-  appointments add   Ajoute un rendez-vous
-  summary            Affiche un bilan synthétique
-  export             Exporte les données locales en JSON
+  Commands:
+    help               Show this help
+    version            Show the version
+    about              Show the current scope
+    privacy            Show privacy information
+    limitations        Show Vitalynq limitations
+    profile set        Save the medical profile
+    profile show       Show the medical profile
+    observations list  List observations
+    obs list           Alias for observations list
+    observations add   Add an observation
+    observations add --date YYYY-MM-DD
+                       Add a dated observation
+    db path            Show the SQLite database path
+    db info            Show local storage information
+    db check           Check local storage access
+    measurements list  List measurements
+    measurements add   Add a measurement
+    measurements add --date YYYY-MM-DD
+                       Add a dated measurement
+    appointments list  List appointments
+    appointments add   Add an appointment
+    summary            Show a summary
+    export             Export local data as JSON
 
-Vitalynq organise des données. Il ne pose pas de diagnostic.`
+  Vitalynq organizes data. It does not provide diagnosis.`
 }
 
 func aboutText() string {
-	return `Vitalynq est une application CLI locale pour organiser des données personnelles de santé.
+	return `Vitalynq is a local CLI application for organizing personal health data.
 
-Périmètre actuel:
-	local
-	mono-utilisateur
-	sans cloud
-	sans télémétrie
+  Current scope:
+  local
+  single-user
+  no cloud
+  no telemetry
 
-Vitalynq ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
+  Vitalynq does not provide diagnosis and does not replace a healthcare professional.`
 }
 
 func privacyText() string {
-	return `Confidentialité Vitalynq
+	return `Vitalynq Privacy
 
-Vitalynq stocke les données localement dans un fichier SQLite.
-Vitalynq n'envoie aucune donnée vers un serveur, un cloud ou une API externe.
-Vitalynq n'utilise pas de télémétrie.
+  Vitalynq stores data locally in a SQLite file.
+  Vitalynq does not send data to a server, cloud service, or external API.
+  Vitalynq does not use telemetry.
 
-Les exports JSON sont affichés localement dans le terminal.
-L'utilisateur reste responsable de la protection du fichier SQLite et des exports.
+  JSON exports are displayed locally in the terminal.
+  The user is responsible for protecting the SQLite file and exports.
 
-Vitalynq organise des données. Il ne pose pas de diagnostic et ne remplace pas un professionnel de santé.`
+  Vitalynq organizes data. It does not provide diagnosis and does not replace a healthcare professional.`
 }
 
 func limitationsText() string {
-	return `Limites de Vitalynq
+	return `Vitalynq Limitations
 
-Vitalynq organise des données personnelles de santé.
-Vitalynq ne pose pas de diagnostic.
-Vitalynq ne recommande aucun traitement.
-Vitalynq ne prédit pas l'évolution d'un état de santé.
-Vitalynq ne remplace pas un professionnel de santé.
+  Vitalynq organizes personal health data.
+  Vitalynq does not provide diagnosis.
+  Vitalynq does not recommend treatments.
+  Vitalynq does not predict health changes.
+  Vitalynq does not replace a healthcare professional.
 
-En cas de question médicale, contactez un professionnel de santé qualifié.`
+  For medical questions, contact a qualified healthcare professional.`
 }
 
 func unknownCommandText(command string) string {
-	return fmt.Sprintf("Commande inconnue: %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command)
+	return fmt.Sprintf("Unknown command: %s\n\nUse 'vitalynq help' to see available commands.", command)
 }
 
 func unknownSubcommandText(command string, subcommand string) string {
-	return fmt.Sprintf("Sous-commande inconnue: %s %s\n\nUtilisez 'vitalynq help' pour voir les commandes disponibles.", command, subcommand)
+	return fmt.Sprintf("Unknown subcommand: %s %s\n\nUse 'vitalynq help' to see available commands.", command, subcommand)
 }
 
 func invalidDateText() string {
