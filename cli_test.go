@@ -393,7 +393,7 @@ func TestOutputForArgsObsAdd(t *testing.T) {
 
 func TestDatabasePathText(t *testing.T) {
 	got := databasePathText("test.db")
-	want := "Base SQLite: test.db"
+	want := "SQLite database: test.db"
 
 	if got != want {
 		t.Fatalf("databasePathText() = %q, want %q", got, want)
@@ -402,7 +402,7 @@ func TestDatabasePathText(t *testing.T) {
 
 func TestOutputForArgsDatabasePath(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "db", "path"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), "test.db")
-	want := "Base SQLite: test.db"
+	want := "SQLite database: test.db"
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -411,10 +411,10 @@ func TestOutputForArgsDatabasePath(t *testing.T) {
 
 func TestDatabaseInfoText(t *testing.T) {
 	got := databaseInfoText("test.db")
-	want := `Base SQLite: test.db
-Stockage: local
-Cloud: non
-Télémétrie: non`
+	want := `SQLite database: test.db
+  Storage: local
+  Cloud: no
+  Telemetry: no`
 
 	if got != want {
 		t.Fatalf("databaseInfoText() = %q, want %q", got, want)
@@ -423,10 +423,10 @@ Télémétrie: non`
 
 func TestOutputForArgsDatabaseInfo(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "db", "info"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), "test.db")
-	want := `Base SQLite: test.db
-Stockage: local
-Cloud: non
-Télémétrie: non`
+	want := `SQLite database: test.db
+  Storage: local
+  Cloud: no
+  Telemetry: no`
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -435,8 +435,8 @@ Télémétrie: non`
 
 func TestDatabaseCheckText(t *testing.T) {
 	got := databaseCheckText()
-	want := `Base SQLite accessible: oui
-Schéma SQLite initialisé: oui`
+	want := `SQLite database accessible: yes
+  SQLite schema initialized: yes`
 
 	if got != want {
 		t.Fatalf("databaseCheckText() = %q, want %q", got, want)
@@ -445,8 +445,8 @@ Schéma SQLite initialisé: oui`
 
 func TestOutputForArgsDatabaseCheckText(t *testing.T) {
 	got := outputForArgs([]string{"vitalynq", "db", "check"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), "test.db")
-	want := `Base SQLite accessible: oui
-Schéma SQLite initialisé: oui`
+	want := `SQLite database accessible: yes
+  SQLite schema initialized: yes`
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)

@@ -337,19 +337,19 @@ func observationsAddText(store ObservationStore, text string) string {
 }
 
 func databasePathText(databasePath string) string {
-	return fmt.Sprintf("Base SQLite: %s", databasePath)
+	return fmt.Sprintf("SQLite database: %s", databasePath)
 }
 
 func databaseInfoText(databasePath string) string {
-	return fmt.Sprintf(`Base SQLite: %s
-Stockage: local
-Cloud: non
-Télémétrie: non`, databasePath)
+	return fmt.Sprintf(`SQLite database: %s
+  Storage: local
+  Cloud: no
+  Telemetry: no`, databasePath)
 }
 
 func databaseCheckText() string {
-	return `Base SQLite accessible: oui
-Schéma SQLite initialisé: oui`
+	return `SQLite database accessible: yes
+  SQLite schema initialized: yes`
 }
 
 func parseObservationDate(value string) (time.Time, error) {
