@@ -383,28 +383,28 @@ func observationsAddTextWithDate(store ObservationStore, dateValue string, text 
 func medicalProfileText(store MedicalProfileStore) string {
 	profile, found, err := store.Get()
 	if err != nil {
-		return fmt.Sprintf("Impossible de lire le profil médical: %v", err)
+		return fmt.Sprintf("Unable to read medical profile: %v", err)
 	}
 
 	if !found {
-		return "Aucun profil médical enregistré."
+		return "No medical profile recorded."
 	}
 
-	return fmt.Sprintf("Profil médical: %s", profile.Label)
+	return fmt.Sprintf("Medical profile: %s", profile.Label)
 }
 
 func medicalProfileSaveText(store MedicalProfileStore, label string) string {
 	profile, err := newMedicalProfile(label)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'enregistrer le profil médical: %v", err)
+		return fmt.Sprintf("Unable to save medical profile: %v", err)
 	}
 
 	saved, err := store.Save(profile)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'enregistrer le profil médical: %v", err)
+		return fmt.Sprintf("Unable to save medical profile: %v", err)
 	}
 
-	return fmt.Sprintf("Profil médical #%d enregistré.", saved.ID)
+	return fmt.Sprintf("Medical profile #%d saved.", saved.ID)
 }
 
 func measurementsListText(store MeasurementStore) string {

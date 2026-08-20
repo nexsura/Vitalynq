@@ -549,7 +549,7 @@ func TestMedicalProfileTextWithoutProfile(t *testing.T) {
 	store := NewMemoryMedicalProfileStore()
 
 	got := medicalProfileText(store)
-	want := "Aucun profil médical enregistré."
+	want := "No medical profile recorded."
 
 	if got != want {
 		t.Fatalf("medicalProfileText() = %q, want %q", got, want)
@@ -559,12 +559,12 @@ func TestMedicalProfileTextWithoutProfile(t *testing.T) {
 func TestMedicalProfileTextWithProfile(t *testing.T) {
 	store := NewMemoryMedicalProfileStore()
 
-	if _, err := store.Save(validMedicalProfile("Profil fictif de test")); err != nil {
+	if _, err := store.Save(validMedicalProfile("Fictive test profile")); err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
 
 	got := medicalProfileText(store)
-	want := "Profil médical: Profil fictif de test"
+	want := "Medical profile: Fictive test profile"
 
 	if got != want {
 		t.Fatalf("medicalProfileText() = %q, want %q", got, want)
@@ -574,12 +574,12 @@ func TestMedicalProfileTextWithProfile(t *testing.T) {
 func TestOutputForArgsProfileShow(t *testing.T) {
 	profileStore := NewMemoryMedicalProfileStore()
 
-	if _, err := profileStore.Save(validMedicalProfile("Profil fictif de test")); err != nil {
+	if _, err := profileStore.Save(validMedicalProfile("Fictive test profile")); err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
 
 	got := outputForArgs([]string{"vitalynq", "profile", "show"}, NewMemoryObservationStore(), profileStore, NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := "Profil médical: Profil fictif de test"
+	want := "Medical profile: Fictive test profile"
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -589,8 +589,8 @@ func TestOutputForArgsProfileShow(t *testing.T) {
 func TestMedicalProfileSaveText(t *testing.T) {
 	store := NewMemoryMedicalProfileStore()
 
-	got := medicalProfileSaveText(store, "Profil fictif de test")
-	want := "Profil médical #1 enregistré."
+	got := medicalProfileSaveText(store, "Fictive test profile")
+	want := "Medical profile #1 saved."
 
 	if got != want {
 		t.Fatalf("medicalProfileSaveText() = %q, want %q", got, want)
@@ -604,8 +604,8 @@ func TestMedicalProfileSaveText(t *testing.T) {
 		t.Fatalf("found = false, want true")
 	}
 
-	if profile.Label != "Profil fictif de test" {
-		t.Fatalf("Label = %q, want %q", profile.Label, "Profil fictif de test")
+	if profile.Label != "Fictive test profile" {
+		t.Fatalf("Label = %q, want %q", profile.Label, "Fictive test profile")
 	}
 }
 
@@ -613,7 +613,7 @@ func TestMedicalProfileSaveTextRejectsBlankLabel(t *testing.T) {
 	store := NewMemoryMedicalProfileStore()
 
 	got := medicalProfileSaveText(store, "  ")
-	want := "Impossible d'enregistrer le profil médical: medical profile label is required"
+	want := "Unable to save medical profile: medical profile label is required"
 
 	if got != want {
 		t.Fatalf("medicalProfileSaveText() = %q, want %q", got, want)
@@ -624,14 +624,14 @@ func TestOutputForArgsProfilSet(t *testing.T) {
 	profileStore := NewMemoryMedicalProfileStore()
 
 	got := outputForArgs(
-		[]string{"vitalynq", "profile", "set", "Profil fictif de test"},
+		[]string{"vitalynq", "profile", "set", "Fictive test profile"},
 		NewMemoryObservationStore(),
 		profileStore,
 		NewMemoryMeasurementStore(),
 		NewMemoryAppointmentStore(),
 		defaultDatabasePath,
 	)
-	want := "Profil médical #1 enregistré."
+	want := "Medical profile #1 saved."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
