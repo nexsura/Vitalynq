@@ -410,15 +410,15 @@ func medicalProfileSaveText(store MedicalProfileStore, label string) string {
 func measurementsListText(store MeasurementStore) string {
 	measurements, err := store.List()
 	if err != nil {
-		return fmt.Sprintf("Impossible de lister les mesures: %v", err)
+		return fmt.Sprintf("Unable to list measurements: %v", err)
 	}
 
 	if len(measurements) == 0 {
-		return "Aucune mesure enregistrée."
+		return "No measurements recorded."
 	}
 
 	var builder strings.Builder
-	builder.WriteString("Mesures:\n")
+	builder.WriteString("Measurements:\n")
 
 	for _, measurement := range measurements {
 		fmt.Fprintf(
@@ -438,48 +438,48 @@ func measurementsListText(store MeasurementStore) string {
 func measurementsAddText(store MeasurementStore, indicator string, value float64, unit string, context string, method string, source string) string {
 	measurement, err := newMeasurement(time.Now().UTC(), indicator, value, unit, context, method, source)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter la mesure: %v", err)
+		return fmt.Sprintf("Unable to add measurement: %v", err)
 	}
 
 	saved, err := store.Save(measurement)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter la mesure: %v", err)
+		return fmt.Sprintf("Unable to add measurement: %v", err)
 	}
 
-	return fmt.Sprintf("Mesure #%d ajoutée.", saved.ID)
+	return fmt.Sprintf("Measurement #%d added.", saved.ID)
 }
 
-func measurementsAddTextWithDate(store MeasurementStore, datevalue string, indicator string, value float64, unit string, context string, method string, source string) string {
-	occurredAt, err := parseObservationDate(datevalue)
+func measurementsAddTextWithDate(store MeasurementStore, dateValue string, indicator string, value float64, unit string, context string, method string, source string) string {
+	occurredAt, err := parseObservationDate(dateValue)
 	if err != nil {
 		return err.Error()
 	}
 
 	measurement, err := newMeasurement(occurredAt, indicator, value, unit, context, method, source)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter la mesure: %v", err)
+		return fmt.Sprintf("Unable to add measurement: %v", err)
 	}
 
 	saved, err := store.Save(measurement)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter la mesure: %v", err)
+		return fmt.Sprintf("Unable to add measurement: %v", err)
 	}
 
-	return fmt.Sprintf("Mesure #%d ajoutée.", saved.ID)
+	return fmt.Sprintf("Measurement #%d added.", saved.ID)
 }
 
 func appointmentsListText(store AppointmentStore) string {
 	appointments, err := store.List()
 	if err != nil {
-		return fmt.Sprintf("Impossible de lister les rendez-vous: %v", err)
+		return fmt.Sprintf("Unable to list appointments: %v", err)
 	}
 
 	if len(appointments) == 0 {
-		return "Aucun rendez-vous enregistré."
+		return "No appointments recorded."
 	}
 
 	var builder strings.Builder
-	builder.WriteString("Rendez-vous:\n")
+	builder.WriteString("Appointments:\n")
 
 	for _, appointment := range appointments {
 		fmt.Fprintf(
@@ -503,34 +503,34 @@ func appointmentsAddText(store AppointmentStore, dateValue string, title string,
 
 	appointment, err := newAppointment(scheduledAt, title, category, location, source)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter le rendez-vous: %v", err)
+		return fmt.Sprintf("Unable to add appointment: %v", err)
 	}
 
 	saved, err := store.Save(appointment)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'ajouter le rendez-vous: %v", err)
+		return fmt.Sprintf("Unable to add appointment: %v", err)
 	}
 
-	return fmt.Sprintf("Rendez-vous #%d ajouté.", saved.ID)
+	return fmt.Sprintf("Appointment #%d added.", saved.ID)
 }
 
 func summaryText(observationStore ObservationStore, measurementStore MeasurementStore, appointmentStore AppointmentStore) string {
 	observations, err := observationStore.List()
 	if err != nil {
-		return fmt.Sprintf("Impossible de produire le bilan: %v", err)
+		return fmt.Sprintf("Unable to produce summary: %v", err)
 	}
 
 	measurements, err := measurementStore.List()
 	if err != nil {
-		return fmt.Sprintf("Impossible de produire le bilan: %v", err)
+		return fmt.Sprintf("Unable to produce summary: %v", err)
 	}
 
 	appointments, err := appointmentStore.List()
 	if err != nil {
-		return fmt.Sprintf("Impossible de produire le bilan: %v", err)
+		return fmt.Sprintf("Unable to produce summary: %v", err)
 	}
 
-	return fmt.Sprintf("Bilan:\n- Observations: %d\n- Mesures: %d\n- Rendez-vous: %d",
+	return fmt.Sprintf("Summary:\n- Observations: %d\n- Measurements: %d\n- Appointments: %d",
 		len(observations),
 		len(measurements),
 		len(appointments),
@@ -540,12 +540,12 @@ func summaryText(observationStore ObservationStore, measurementStore Measurement
 func exportText(profileStore MedicalProfileStore, observationStore ObservationStore, measurementStore MeasurementStore, appointmentStore AppointmentStore) string {
 	snapshot, err := buildExportSnapshot(profileStore, observationStore, measurementStore, appointmentStore)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'exporter les données: %v", err)
+		return fmt.Sprintf("Unable to export data: %v", err)
 	}
 
 	jsonText, err := exportSnapshotJSON(snapshot)
 	if err != nil {
-		return fmt.Sprintf("Impossible d'exporter les données: %v", err)
+		return fmt.Sprintf("Unable to export data: %v", err)
 	}
 
 	return jsonText

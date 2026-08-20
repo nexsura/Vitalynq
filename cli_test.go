@@ -113,8 +113,8 @@ func TestOutputForArgsLimitations(t *testing.T) {
 }
 
 func TestUnknownCommandText(t *testing.T) {
-	got := unknownCommandText("profil")
-	want := "Unknown command: profil\n\nUse 'vitalynq help' to see available commands."
+	got := unknownCommandText("unknown")
+	want := "Unknown command: unknown\n\nUse 'vitalynq help' to see available commands."
 
 	if got != want {
 		t.Fatalf("unknownCommandText() = %q, want %q", got, want)
@@ -264,8 +264,8 @@ func TestOutputForArgsPrivacy(t *testing.T) {
 }
 
 func TestOutputForArgsUnknownCommand(t *testing.T) {
-	got := outputForArgs([]string{"vitalynq", "profil"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
-	want := unknownCommandText("profil")
+	got := outputForArgs([]string{"vitalynq", "unknown"}, NewMemoryObservationStore(), NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	want := unknownCommandText("unknown")
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -313,13 +313,13 @@ func TestOutputForArgsObservationsList(t *testing.T) {
 func TestObservationsListTextWithObservations(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	if _, err := store.Save(validStoreObservation("Observation fictive de test")); err != nil {
+	if _, err := store.Save(validStoreObservation("Fictive test observation")); err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
 
 	got := observationsListText(store)
 	want := `Observations:
-- #1 2026-07-17 Observation fictive de test`
+- #1 2026-07-17 Fictive test observation`
 
 	if got != want {
 		t.Fatalf("observationsListText() = %q, want %q", got, want)
@@ -329,7 +329,7 @@ func TestObservationsListTextWithObservations(t *testing.T) {
 func TestObservationsAddText(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := observationsAddText(store, "Observation fictive de test")
+	got := observationsAddText(store, "Fictive test observation")
 	want := "Observation #1 added."
 
 	if got != want {
@@ -344,15 +344,15 @@ func TestObservationsAddText(t *testing.T) {
 		t.Fatalf("len(List()) = %d, want 1", len(observations))
 	}
 
-	if observations[0].Text != "Observation fictive de test" {
-		t.Fatalf("Text = %q, want %q", observations[0].Text, "Observation fictive de test")
+	if observations[0].Text != "Fictive test observation" {
+		t.Fatalf("Text = %q, want %q", observations[0].Text, "Fictive test observation")
 	}
 }
 
 func TestOutputForArgsObservationsAdd(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "Fictive test observation"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := "Observation #1 added."
 
 	if got != want {
@@ -383,7 +383,7 @@ func TestOutputForArgsObsList(t *testing.T) {
 func TestOutputForArgsObsAdd(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "obs", "add", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "obs", "add", "Fictive test observation"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := "Observation #1 added."
 
 	if got != want {
@@ -475,7 +475,7 @@ func TestParseObservationDateRejectsInvalidDate(t *testing.T) {
 func TestObservationsAddTextWithDate(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := observationsAddTextWithDate(store, "2026-07-29", "Observation fictive de test")
+	got := observationsAddTextWithDate(store, "2026-07-29", "Fictive test observation")
 	want := "Observation #1 added."
 
 	if got != want {
@@ -500,7 +500,7 @@ func TestObservationsAddTextWithDate(t *testing.T) {
 func TestOutputForArgsObservationsAddWithDate(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "2026-07-29", "Fictive test observation"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := "Observation #1 added."
 
 	if got != want {
@@ -537,7 +537,7 @@ func TestOutputForArgsObservationsAddWithDateMissingText(t *testing.T) {
 func TestOutputForArgsObservationsAddWithInvalidDate(t *testing.T) {
 	store := NewMemoryObservationStore()
 
-	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "29-07-2026", "Observation fictive de test"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
+	got := outputForArgs([]string{"vitalynq", "observations", "add", "--date", "29-07-2026", "Fictive test observation"}, store, NewMemoryMedicalProfileStore(), NewMemoryMeasurementStore(), NewMemoryAppointmentStore(), defaultDatabasePath)
 	want := invalidDateText()
 
 	if got != want {
@@ -651,7 +651,7 @@ func TestMeasurementsListTextWithoutMeasurements(t *testing.T) {
 	store := NewMemoryMeasurementStore()
 
 	got := measurementsListText(store)
-	want := "Aucune mesure enregistrée."
+	want := "No measurements recorded."
 
 	if got != want {
 		t.Fatalf("measurementsListText() %q, want %q", got, want)
@@ -661,13 +661,13 @@ func TestMeasurementsListTextWithoutMeasurements(t *testing.T) {
 func TestMeasurementsListTextWithMeasurements(t *testing.T) {
 	store := NewMemoryMeasurementStore()
 
-	if _, err := store.Save(validMeasurement()); err != nil {
+	if _, err := store.Save(validCLIMeasurement()); err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
 
 	got := measurementsListText(store)
-	want := `Mesures:
-- #1 2026-07-17 poids 72.50 kg`
+	want := `Measurements:
+- #1 2026-07-17 weight 72.50 kg`
 
 	if got != want {
 		t.Fatalf("measurementsListText() = %q, want %q", got, want)
@@ -683,7 +683,7 @@ func TestOutputForArgsMeasurementsList(t *testing.T) {
 		NewMemoryAppointmentStore(),
 		defaultDatabasePath,
 	)
-	want := "Aucune mesure enregistrée."
+	want := "No measurements recorded."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -695,14 +695,14 @@ func TestMeasurementsAddText(t *testing.T) {
 
 	got := measurementsAddText(
 		store,
-		"poids",
+		"weight",
 		72.5,
 		"kg",
-		"test fictif",
-		"saisie manuelle",
-		"saisie manuelle",
+		"fictive test",
+		"manual entry",
+		"manual entry",
 	)
-	want := "Mesure #1 ajoutée."
+	want := "Measurement #1 added."
 
 	if got != want {
 		t.Fatalf("measurementsAddText() = %q, want %q", got, want)
@@ -717,8 +717,8 @@ func TestMeasurementsAddText(t *testing.T) {
 		t.Fatalf("len(List()) = %d, want 1", len(measurements))
 	}
 
-	if measurements[0].Indicator != "poids" {
-		t.Fatalf("Indicator = %q, want %q", measurements[0].Indicator, "poids")
+	if measurements[0].Indicator != "weight" {
+		t.Fatalf("Indicator = %q, want %q", measurements[0].Indicator, "weight")
 	}
 
 	if measurements[0].Unit != "kg" {
@@ -763,14 +763,14 @@ func TestMeasurementsAddTextRejectsMissingUnit(t *testing.T) {
 
 	got := measurementsAddText(
 		store,
-		"poids",
+		"weight",
 		72.5,
 		"	",
-		"test fictif",
-		"saisie manuelle",
-		"saisie manuelle",
+		"fictive test",
+		"manual entry",
+		"manual entry",
 	)
-	want := "Impossible d'ajouter la mesure: measurement unit is required"
+	want := "Unable to add measurement: measurement unit is required"
 
 	if got != want {
 		t.Fatalf("measurementsAddText() = %q, want %q", got, want)
@@ -781,14 +781,14 @@ func TestOutputForArgsMeasurementsAdd(t *testing.T) {
 	measurementStore := NewMemoryMeasurementStore()
 
 	got := outputForArgs(
-		[]string{"vitalynq", "measurements", "add", "poids", "72.5", "kg", "test fictif", "saisie manuelle", "saisie manuelle"},
+		[]string{"vitalynq", "measurements", "add", "weight", "72.5", "kg", "fictive test", "manual entry", "manual entry"},
 		NewMemoryObservationStore(),
 		NewMemoryMedicalProfileStore(),
 		measurementStore,
 		NewMemoryAppointmentStore(),
 		defaultDatabasePath,
 	)
-	want := "Mesure #1 ajoutée."
+	want := "Measurement #1 added."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -797,7 +797,7 @@ func TestOutputForArgsMeasurementsAdd(t *testing.T) {
 
 func TestOutputForArgsMeasurementsAddRejectsInvalidValue(t *testing.T) {
 	got := outputForArgs(
-		[]string{"vitalynq", "measurements", "add", "poids", "abc", "kg", "test fictif", "saisie manuelle", "saisie manuelle"},
+		[]string{"vitalynq", "measurements", "add", "weight", "abc", "kg", "fictive test", "manual entry", "manual entry"},
 		NewMemoryObservationStore(),
 		NewMemoryMedicalProfileStore(),
 		NewMemoryMeasurementStore(),
@@ -817,14 +817,14 @@ func TestMeasurementsAddTextWithDate(t *testing.T) {
 	got := measurementsAddTextWithDate(
 		store,
 		"2026-07-29",
-		"poids",
+		"weight",
 		72.5,
 		"kg",
-		"test fictif",
-		"saisie manuelle",
-		"saisie manuelle",
+		"fictive test",
+		"manual entry",
+		"manual entry",
 	)
-	want := "Mesure #1 ajoutée."
+	want := "Measurement #1 added."
 
 	if got != want {
 		t.Fatalf("measurementsAddTextWithDate() = %q, want %q", got, want)
@@ -845,14 +845,14 @@ func TestOutputForArgsMeasurementsAddWithDate(t *testing.T) {
 	measurementStore := NewMemoryMeasurementStore()
 
 	got := outputForArgs(
-		[]string{"vitalynq", "measurements", "add", "--date", "2026-07-29", "poids", "72.5", "kg", "test fictif", "saisie manuelle", "saisie manuelle"},
+		[]string{"vitalynq", "measurements", "add", "--date", "2026-07-29", "weight", "72.5", "kg", "fictive test", "manual entry", "manual entry"},
 		NewMemoryObservationStore(),
 		NewMemoryMedicalProfileStore(),
 		measurementStore,
 		NewMemoryAppointmentStore(),
 		defaultDatabasePath,
 	)
-	want := "Mesure #1 ajoutée."
+	want := "Measurement #1 added."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -863,7 +863,7 @@ func TestAppointmentsListTextWithoutAppointments(t *testing.T) {
 	store := NewMemoryAppointmentStore()
 
 	got := appointmentsListText(store)
-	want := "Aucun rendez-vous enregistré."
+	want := "No appointments recorded."
 
 	if got != want {
 		t.Fatalf("Save() error = %q, want %q", got, want)
@@ -873,13 +873,13 @@ func TestAppointmentsListTextWithoutAppointments(t *testing.T) {
 func TestAppointmentsListTextWithAppointments(t *testing.T) {
 	store := NewMemoryAppointmentStore()
 
-	if _, err := store.Save(validAppointment()); err != nil {
+	if _, err := store.Save(validCLIAppointment()); err != nil {
 		t.Fatalf("Save() error = %v, want nil", err)
 	}
 
 	got := appointmentsListText(store)
-	want := `Rendez-vous:
-- #1 2026-07-17 consultation fictive (rendez-vous)`
+	want := `Appointments:
+- #1 2026-07-17 fictive consultation (appointment)`
 
 	if got != want {
 		t.Fatalf("appointmentsListText() = %q, want %q", got, want)
@@ -892,12 +892,12 @@ func TestAppointmentsAddText(t *testing.T) {
 	got := appointmentsAddText(
 		store,
 		"2026-07-29",
-		"consultation fictive",
-		"rendez-vous",
-		"cabinet fictif",
-		"saisie manuelle",
+		"fictive consultation",
+		"appointment",
+		"fictive office",
+		"manual entry",
 	)
-	want := "Rendez-vous #1 ajouté."
+	want := "Appointment #1 added."
 
 	if got != want {
 		t.Fatalf("appointmentsAddText() = %q, want %q", got, want)
@@ -912,8 +912,8 @@ func TestAppointmentsAddText(t *testing.T) {
 		t.Fatalf("len(List()) = %d, want 1", len(appointments))
 	}
 
-	if appointments[0].Title != "consultation fictive" {
-		t.Fatalf("Title = %q, want %q", appointments[0].Title, "consultation fictive")
+	if appointments[0].Title != "fictive consultation" {
+		t.Fatalf("Title = %q, want %q", appointments[0].Title, "fictive consultation")
 	}
 }
 
@@ -923,10 +923,10 @@ func TestAppointmentsAddTextRejectsInvalidDate(t *testing.T) {
 	got := appointmentsAddText(
 		store,
 		"29-07-2026",
-		"consultation fictive",
-		"rendez-vous",
-		"cabinet fictif",
-		"saisie manuelle",
+		"fictive consultation",
+		"appointment",
+		"fictive office",
+		"manual entry",
 	)
 	want := invalidDateText()
 
@@ -936,17 +936,17 @@ func TestAppointmentsAddTextRejectsInvalidDate(t *testing.T) {
 }
 
 func TestOutputForArgsAppointmentsAdd(t *testing.T) {
-	AppointmentStore := NewMemoryAppointmentStore()
+	appointmentStore := NewMemoryAppointmentStore()
 
 	got := outputForArgs(
-		[]string{"vitalynq", "appointments", "add", "2026-07-29", "consultation fictive", "rendez-vous", "cabinet fictif", "saisie manuelle"},
+		[]string{"vitalynq", "appointments", "add", "2026-07-29", "fictive consultation", "appointment", "fictive office", "manual entry"},
 		NewMemoryObservationStore(),
 		NewMemoryMedicalProfileStore(),
 		NewMemoryMeasurementStore(),
-		AppointmentStore,
+		appointmentStore,
 		defaultDatabasePath,
 	)
-	want := "Rendez-vous #1 ajouté."
+	want := "Appointment #1 added."
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -974,23 +974,23 @@ func TestSummaryText(t *testing.T) {
 	measurementStore := NewMemoryMeasurementStore()
 	appointmentStore := NewMemoryAppointmentStore()
 
-	if _, err := observationStore.Save(validStoreObservation("Observation fictive")); err != nil {
+	if _, err := observationStore.Save(validStoreObservation("Fictive observation")); err != nil {
 		t.Fatalf("Save(observation) error = %v, want nil", err)
 	}
 
-	if _, err := measurementStore.Save(validMeasurement()); err != nil {
+	if _, err := measurementStore.Save(validCLIMeasurement()); err != nil {
 		t.Fatalf("Save(measurement) error = %v, want nil", err)
 	}
 
-	if _, err := appointmentStore.Save(validAppointment()); err != nil {
+	if _, err := appointmentStore.Save(validCLIAppointment()); err != nil {
 		t.Fatalf("Save(appointment) error = %v, want nil", err)
 	}
 
 	got := summaryText(observationStore, measurementStore, appointmentStore)
-	want := `Bilan:
+	want := `Summary:
 - Observations: 1
-- Mesures: 1
-- Rendez-vous: 1`
+- Measurements: 1
+- Appointments: 1`
 
 	if got != want {
 		t.Fatalf("summaryText() = %q, want %q", got, want)
@@ -1002,7 +1002,7 @@ func TestOutputForArgsSummary(t *testing.T) {
 	measurementStore := NewMemoryMeasurementStore()
 	appointmentStore := NewMemoryAppointmentStore()
 
-	if _, err := observationStore.Save(validStoreObservation("Observation fictive")); err != nil {
+	if _, err := observationStore.Save(validStoreObservation("Fictive observation")); err != nil {
 		t.Fatalf("Save(observation) error = %v, want nil", err)
 	}
 
@@ -1014,10 +1014,10 @@ func TestOutputForArgsSummary(t *testing.T) {
 		appointmentStore,
 		defaultDatabasePath,
 	)
-	want := `Bilan:
+	want := `Summary:
 - Observations: 1
-- Mesures: 0
-- Rendez-vous: 0`
+- Measurements: 0
+- Appointments: 0`
 
 	if got != want {
 		t.Fatalf("outputForArgs() = %q, want %q", got, want)
@@ -1030,7 +1030,7 @@ func TestOutputForArgsExport(t *testing.T) {
 	measurementStore := NewMemoryMeasurementStore()
 	appointmentStore := NewMemoryAppointmentStore()
 
-	if _, err := observationStore.Save(validStoreObservation("Observation fictive")); err != nil {
+	if _, err := observationStore.Save(validStoreObservation("Fictive observation")); err != nil {
 		t.Fatalf("Save(observation) error = %v, want nil", err)
 	}
 
@@ -1047,7 +1047,31 @@ func TestOutputForArgsExport(t *testing.T) {
 	assertContains(t, got, `"observations"`)
 	assertContains(t, got, `"measurements"`)
 	assertContains(t, got, `"appointments"`)
-	assertContains(t, got, `"Observation fictive"`)
+	assertContains(t, got, `"Fictive observation"`)
+}
+
+func validCLIMeasurement() Measurement {
+	return Measurement{
+		OccurredAt: testTime(),
+		CreatedAt:  testTime(),
+		Indicator:  "weight",
+		Value:      72.5,
+		Unit:       "kg",
+		Context:    "fictive test",
+		Method:     "manual entry",
+		Source:     "manual entry",
+	}
+}
+
+func validCLIAppointment() Appointment {
+	return Appointment{
+		ScheduledAt: testTime(),
+		CreatedAt:   testTime(),
+		Title:       "fictive consultation",
+		Category:    "appointment",
+		Location:    "fictive office",
+		Source:      "manual entry",
+	}
 }
 
 func assertContains(t *testing.T, got string, want string) {
