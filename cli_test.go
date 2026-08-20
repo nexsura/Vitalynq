@@ -132,9 +132,9 @@ func TestUnknownSubcommandText(t *testing.T) {
 
 func TestInvalidDateText(t *testing.T) {
 	got := invalidDateText()
-	want := `Date invalide.
+	want := `Invalid date.
 
-Utilisez le format YYYY-MM-DD, par exemple: 2026-07-29`
+  Use the YYYY-MM-DD format, for example: 2026-07-29`
 
 	if got != want {
 		t.Fatalf("invalidDateText() = %q, want %q", got, want)
@@ -143,9 +143,9 @@ Utilisez le format YYYY-MM-DD, par exemple: 2026-07-29`
 
 func TestMissingObservationText(t *testing.T) {
 	got := missingObservationText()
-	want := `Texte d'observation manquant.
+	want := `Missing observation text.
 
-Usage: vitalynq observations add "Observation fictive"`
+  Usage: vitalynq observations add "Fictive observation"`
 
 	if got != want {
 		t.Fatalf("missingObservationText() = %q, want %q", got, want)
@@ -154,9 +154,9 @@ Usage: vitalynq observations add "Observation fictive"`
 
 func TestMissingObservationDateText(t *testing.T) {
 	got := missingObservationDateText()
-	want := `Date ou texte d'observation manquant.
+	want := `Missing observation date or text.
 
-Usage: vitalynq observations add --date YYYY-MM-DD "Observation fictive"`
+  Usage: vitalynq observations add --date YYYY-MM-DD "Fictive observation"`
 
 	if got != want {
 		t.Fatalf("missingObservationDateText() = %q, want %q", got, want)
@@ -165,9 +165,9 @@ Usage: vitalynq observations add --date YYYY-MM-DD "Observation fictive"`
 
 func TestMissingMeasurementText(t *testing.T) {
 	got := missingMeasurementText()
-	want := `Arguments de mesure manquants.
+	want := `Missing measurement arguments.
 
-Usage: vitalynq measurements add indicateur valeur unité contexte méthode source`
+  Usage: vitalynq measurements add indicator value unit context method source`
 
 	if got != want {
 		t.Fatalf("missingMeasurementText() = %q, want %q", got, want)
@@ -176,9 +176,9 @@ Usage: vitalynq measurements add indicateur valeur unité contexte méthode sour
 
 func TestMissingMeasurementDateText(t *testing.T) {
 	got := missingMeasurementDateText()
-	want := `Date ou arguments de mesure manquants.
+	want := `Missing measurement date or arguments.
 
-Usage: vitalynq measurements add --date YYYY-MM-DD indicateur valeur unité contexte méthode source`
+  Usage: vitalynq measurements add --date YYYY-MM-DD indicator value unit context method source`
 
 	if got != want {
 		t.Fatalf("missingMeasurementDateText() = %q, want %q", got, want)
@@ -187,9 +187,9 @@ Usage: vitalynq measurements add --date YYYY-MM-DD indicateur valeur unité cont
 
 func TestInvalidMeasurementValueText(t *testing.T) {
 	got := invalidMeasurementValueText()
-	want := `Valeur de mesure invalide.
+	want := `Invalid measurement value.
 
-La valeur doit être un nombre, par exemple: 72.5`
+  The value must be a number, for example: 72.5`
 
 	if got != want {
 		t.Fatalf("invalidMeasurementValueText() = %q, want %q", got, want)
@@ -198,9 +198,9 @@ La valeur doit être un nombre, par exemple: 72.5`
 
 func TestMissingAppointmentText(t *testing.T) {
 	got := missingAppointmentText()
-	want := `Arguments de rendez-vous manquants.
+	want := `Missing appointment arguments.
 
-Usage: vitalynq appointments add YYYY-MM-DD titre catégorie lieu source`
+  Usage: vitalynq appointments add YYYY-MM-DD title category location source`
 
 	if got != want {
 		t.Fatalf("missingAppointmentText() = %q, want %q", got, want)
@@ -209,9 +209,9 @@ Usage: vitalynq appointments add YYYY-MM-DD titre catégorie lieu source`
 
 func TestMissingMedicalProfileLabelText(t *testing.T) {
 	got := missingMedicalProfileLabelText()
-	want := `Libellé du profil médical manquant.
+	want := `Missing medical profile label.
 
-Usage: vitalynq profile set "Profil fictif"`
+  Usage: vitalynq profile set "Fictive profile"`
 
 	if got != want {
 		t.Fatalf("missingMedicalProfileLabelText() = %q, want %q", got, want)

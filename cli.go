@@ -88,51 +88,51 @@ func unknownSubcommandText(command string, subcommand string) string {
 }
 
 func invalidDateText() string {
-	return `Date invalide.
+	return `Invalid date.
 
-Utilisez le format YYYY-MM-DD, par exemple: 2026-07-29`
+  Use the YYYY-MM-DD format, for example: 2026-07-29`
 }
 
 func missingObservationText() string {
-	return `Texte d'observation manquant.
+	return `Missing observation text.
 
-Usage: vitalynq observations add "Observation fictive"`
+  Usage: vitalynq observations add "Fictive observation"`
 }
 
 func missingObservationDateText() string {
-	return `Date ou texte d'observation manquant.
+	return `Missing observation date or text.
 
-Usage: vitalynq observations add --date YYYY-MM-DD "Observation fictive"`
+  Usage: vitalynq observations add --date YYYY-MM-DD "Fictive observation"`
 }
 
 func missingMeasurementText() string {
-	return `Arguments de mesure manquants.
+	return `Missing measurement arguments.
 
-Usage: vitalynq measurements add indicateur valeur unité contexte méthode source`
+  Usage: vitalynq measurements add indicator value unit context method source`
 }
 
 func missingMeasurementDateText() string {
-	return `Date ou arguments de mesure manquants.
+	return `Missing measurement date or arguments.
 
-Usage: vitalynq measurements add --date YYYY-MM-DD indicateur valeur unité contexte méthode source`
+  Usage: vitalynq measurements add --date YYYY-MM-DD indicator value unit context method source`
 }
 
 func invalidMeasurementValueText() string {
-	return `Valeur de mesure invalide.
+	return `Invalid measurement value.
 
-La valeur doit être un nombre, par exemple: 72.5`
+  The value must be a number, for example: 72.5`
 }
 
 func missingAppointmentText() string {
-	return `Arguments de rendez-vous manquants.
+	return `Missing appointment arguments.
 
-Usage: vitalynq appointments add YYYY-MM-DD titre catégorie lieu source`
+  Usage: vitalynq appointments add YYYY-MM-DD title category location source`
 }
 
 func missingMedicalProfileLabelText() string {
-	return `Libellé du profil médical manquant.
+	return `Missing medical profile label.
 
-Usage: vitalynq profile set "Profil fictif"`
+  Usage: vitalynq profile set "Fictive profile"`
 }
 
 func outputForArgs(args []string, observationStore ObservationStore, profileStore MedicalProfileStore, measurementStore MeasurementStore, appointmentStore AppointmentStore, databasePath string) string {
