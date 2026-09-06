@@ -26,6 +26,10 @@ func openSQLite(path string) (*sql.DB, error) {
 
 func initializeSQLiteSchema(db *sql.DB) error {
 	statements := []string{
+		`CREATE TABLE IF NOT EXISTS schema_migrations (
+    version INTEGER PRIMARY KEY,
+    applied_at TEXT NOT NULL
+    );`,
 		`CREATE TABLE IF NOT EXISTS observations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   occurred_at TEXT NOT NULL,
