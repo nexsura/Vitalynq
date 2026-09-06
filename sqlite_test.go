@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"testing"
 )
 
@@ -182,5 +183,45 @@ func TestRecordSQLiteMigrationVersion(t *testing.T) {
 
 	if versions[0] != 1 {
 		t.Fatalf("version[0] = %d, want 1", versions[0])
+	}
+}
+
+func TestSQLiteMigrationStoresVersionAndApplyFunction(t *testing.T) {
+	called := false
+
+	migration := SQLiteMigration{
+		Version: 1,
+		Apply: func(tx *sql.Tx) error {
+			called = true
+			return nil
+		},
+	}
+
+	if migration.Version != 1 {
+		t.Fatalf("Version = %d, want 1", migration.Version)
+	}
+
+	if migration.Apply == nil {
+		t.Fatalf("Apply = nil, want function")
+	}
+
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	tx, err := db.Begin()
+	if err != nil {
+		t.Fatalf("Begin() error = %v, want nil", err)
+	}
+	defer tx.Rollback()
+
+	if err := migration.Apply(tx); err != nil {
+		t.Fatalf("Apply() error = %v, want nil", err)
+	}
+
+	if !called {
+		t.Fatalf("called = false, want true")
 	}
 }

@@ -8,6 +8,11 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+type SQLiteMigration struct {
+	Version int
+	Apply   func(*sql.Tx) error
+}
+
 func openSQLite(path string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite", path)
 	if err != nil {
