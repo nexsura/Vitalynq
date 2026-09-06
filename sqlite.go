@@ -73,3 +73,28 @@ func initializeSQLiteSchema(db *sql.DB) error {
 
 	return nil
 }
+
+func appliedSQLiteMigrationVersions(db *sql.DB) ([]int, error) {
+	rows, err := db.Query("SELECT version FROM schema_migrations ORDER BY version ASC")
+	if err != nil {
+		return nil, fmt.Errorf("list sqlite migration versions: %w", err)
+	}
+	defer rows.Close()
+
+	var versions []int
+
+	for rows.Next() {
+		var version int
+		if err := rows.Scan(&version); err != nil {
+			return nil, fmt.Errorf("scan sqlite migration version: %w", err)
+		}
+
+		versions = append(versions, version)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate sqlite migration versions: %w", err)
+	}
+
+	return versions, nil
+}

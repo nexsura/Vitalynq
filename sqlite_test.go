@@ -134,3 +134,24 @@ func TestInitializeSQLiteSchemaCreatesSchemaMigrationsTable(t *testing.T) {
 		t.Fatalf("tableName = %q, want %q", tableName, "schema_migrations")
 	}
 }
+
+func TestAppliedSQLiteMigrationVersionsReturnsEmptyList(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	versions, err := appliedSQLiteMigrationVersions(db)
+	if err != nil {
+		t.Fatalf("appliedSQLiteMigrationVersions() error = %v, want nil", err)
+	}
+
+	if len(versions) != 0 {
+		t.Fatalf("len(versions) = %d, want 0", len(versions))
+	}
+}
