@@ -155,3 +155,32 @@ func TestAppliedSQLiteMigrationVersionsReturnsEmptyList(t *testing.T) {
 		t.Fatalf("len(versions) = %d, want 0", len(versions))
 	}
 }
+
+func TestRecordSQLiteMigrationVersion(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if err := recordSQLiteMigrationVersion(db, 1, testTime()); err != nil {
+		t.Fatalf("recordSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	versions, err := appliedSQLiteMigrationVersions(db)
+	if err != nil {
+		t.Fatalf("appliedSQLiteMigrationVersions() error = %v, want nil", err)
+	}
+
+	if len(versions) != 1 {
+		t.Fatalf("len(versions) = %d, want 1", len(versions))
+	}
+
+	if versions[0] != 1 {
+		t.Fatalf("version[0] = %d, want 1", versions[0])
+	}
+}

@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -97,4 +98,25 @@ func appliedSQLiteMigrationVersions(db *sql.DB) ([]int, error) {
 	}
 
 	return versions, nil
+}
+
+func recordSQLiteMigrationVersion(db *sql.DB, version int, appliedAt time.Time) error {
+	if version <= 0 {
+		return fmt.Errorf("sqlite migration version must be positive")
+	}
+
+	if appliedAt.IsZero() {
+		return fmt.Errorf("sqlite migration applied date is required")
+	}
+
+	_, err := db.Exec(
+		"INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)",
+		version,
+		appliedAt.UTC().Format(time.RFC3339),
+	)
+	if err != nil {
+		return fmt.Errorf("record sqlite migration version: %w", err)
+	}
+
+	return nil
 }
