@@ -46,3 +46,11 @@ Tradeoffs:
 - persistence setup becomes more structured;
 - failed migrations need careful error handling;
 - destructive changes require stronger justification and documentation.
+
+## Current Baseline
+
+The existing SQLite schema created by `initializeSQLiteSchema` is considered the initial supported baseline for the current v1.0 development line.
+
+This baseline is not yet represented as an applied migration in existing databases. Defining this baseline does not modify any existing database and does not insert any row into `schema_migrations`.
+
+The project will define a separate baseline procedure before automatic migrations are enabled at startup.
