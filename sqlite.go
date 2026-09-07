@@ -207,3 +207,67 @@ func applySQLiteMigrations(db *sql.DB, migrations []SQLiteMigration, appliedAt t
 func sqliteMigrations() []SQLiteMigration {
 	return []SQLiteMigration{}
 }
+
+func hasCurrentSQLiteSchema(db *sql.DB) (bool, error) {
+	expectedTables := []string{
+		"schema_migrations",
+		"observations",
+		"medical_profiles",
+		"measurements",
+		"appointments",
+	}
+
+	for _, tableName := range expectedTables {
+		var exists bool
+		err := db.QueryRow(
+			"SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?)",
+			tableName,
+		).Scan(&exists)
+		if err != nil {
+			return false, fmt.Errorf("check sqlite table %s: %w", tableName, err)
+		}
+		if !exists {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+func markCurrentSQLiteSchemaBaseline(db *sql.DB, appliedAt time.Time) error {
+	if appliedAt.IsZero() {
+		return fmt.Errorf("sqlite schema baseline applied date is required")
+	}
+
+	hasSchema, err := hasCurrentSQLiteSchema(db)
+	if err != nil {
+		return err
+	}
+	if !hasSchema {
+		return fmt.Errorf("sqlite schema does not match current baseline")
+	}
+
+	versions, err := appliedSQLiteMigrationVersions(db)
+	if err != nil {
+		return err
+	}
+	if len(versions) != 0 {
+		return fmt.Errorf("sqlite schema baseline already has applied migrations")
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		return fmt.Errorf("begin sqlite schema baseline transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	if err := recordSQLiteMigrationVersion(tx, 1, appliedAt); err != nil {
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("commit sqlite schema baseline transaction: %w", err)
+	}
+
+	return nil
+}

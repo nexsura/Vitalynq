@@ -602,3 +602,141 @@ func TestApplySQLiteMigrationsDoesNotRecordFailedMigration(t *testing.T) {
 		t.Fatalf("applied = true, want false")
 	}
 }
+
+func TestHasCurrentSQLiteSchemaReturnsTrueForInitializedSchema(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	hasSchema, err := hasCurrentSQLiteSchema(db)
+	if err != nil {
+		t.Fatalf("hasCurrentSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if !hasSchema {
+		t.Fatalf("hasSchema = false, want true")
+	}
+}
+
+func TestHasCurrentSQLiteSchemaReturnsFalseForEmptyDatabase(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	hasSchema, err := hasCurrentSQLiteSchema(db)
+	if err != nil {
+		t.Fatalf("hasCurrentSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if hasSchema {
+		t.Fatalf("hasSchemma = true, want false")
+	}
+}
+
+func TestMarkCurrentSQLiteSchemaBaselineRecordsVersionOne(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if err := markCurrentSQLiteSchemaBaseline(db, testTime()); err != nil {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = %v, want nil", err)
+	}
+
+	applied, err := hasSQLiteMigrationVersion(db, 1)
+	if err != nil {
+		t.Fatalf("hasSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if !applied {
+		t.Fatalf("applied = false , want true")
+	}
+}
+
+func TestMarkCurrentSQLiteSchemaBaselineRejectsEmptyDatabase(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	err = markCurrentSQLiteSchemaBaseline(db, testTime())
+	if err == nil {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = nil, want error")
+	}
+
+	want := "sqlite schema does not match current baseline"
+	if err.Error() != want {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = %q, want %q", err.Error(), want)
+	}
+}
+
+func TestMarkCurrentSQLiteSchemaBaselineRejectsExistingMigrations(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		t.Fatalf("Begin() error = %v, want nil", err)
+	}
+
+	if err := recordSQLiteMigrationVersion(tx, 1, testTime()); err != nil {
+		t.Fatalf("recordSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		t.Fatalf("Commit() error = %v, want nil", err)
+	}
+
+	err = markCurrentSQLiteSchemaBaseline(db, testTime())
+	if err == nil {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = nil, want error")
+	}
+
+	want := "sqlite schema baseline already has applied migrations"
+	if err.Error() != want {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = %q, want %q", err.Error(), want)
+	}
+}
+
+func TestMarkCurrentSQLiteSchemaBaselineRejectsMissingAppliedDate(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	err = markCurrentSQLiteSchemaBaseline(db, time.Time{})
+	if err == nil {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = nil, want error")
+	}
+
+	want := "sqlite schema baseline applied date is required"
+	if err.Error() != want {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = %q, want %q", err.Error(), want)
+	}
+}
