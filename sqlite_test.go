@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"testing"
 	"time"
 )
@@ -512,5 +513,59 @@ func TestApplySQLiteMigrationsRejectsDuplicateVersion(t *testing.T) {
 	want := "duplicate sqlite migration version: 1"
 	if err.Error() != want {
 		t.Fatalf("applySQLiteMigrations() error = %q, want %q", err.Error(), want)
+	}
+}
+
+func TestApplySQLiteMigrationsStopsAfterFailedMigration(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	var appliedVersions []int
+
+	migrations := []SQLiteMigration{
+		{
+			Version: 1,
+			Apply: func(tx *sql.Tx) error {
+				appliedVersions = append(appliedVersions, 1)
+				return nil
+			},
+		},
+		{
+			Version: 2,
+			Apply: func(tx *sql.Tx) error {
+				appliedVersions = append(appliedVersions, 2)
+				return fmt.Errorf("fictive migration failure")
+			},
+		},
+		{
+			Version: 3,
+			Apply: func(tx *sql.Tx) error {
+				appliedVersions = append(appliedVersions, 3)
+				return nil
+			},
+		},
+	}
+
+	err = applySQLiteMigrations(db, migrations, testTime())
+	if err == nil {
+		t.Fatalf("applySQLiteMigrations() error = nil , want error")
+	}
+
+	wantVersions := []int{1, 2}
+	if len(appliedVersions) != len(wantVersions) {
+		t.Fatalf("len(appliedVersions) = %d, want %d", len(appliedVersions), len(wantVersions))
+	}
+
+	for index := range wantVersions {
+		if appliedVersions[index] != wantVersions[index] {
+			t.Fatalf("appliedVersions[%d] = %d, want %d", index, appliedVersions[index], wantVersions[index])
+		}
 	}
 }
