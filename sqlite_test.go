@@ -477,3 +477,40 @@ func TestApplySQLiteMigrationsAppliesMigrationsInVersionOrder(t *testing.T) {
 		}
 	}
 }
+
+func TestApplySQLiteMigrationsRejectsDuplicateVersion(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	migrations := []SQLiteMigration{
+		{
+			Version: 1,
+			Apply: func(tx *sql.Tx) error {
+				return nil
+			},
+		},
+		{
+			Version: 1,
+			Apply: func(tx *sql.Tx) error {
+				return nil
+			},
+		},
+	}
+
+	err = applySQLiteMigrations(db, migrations, testTime())
+	if err == nil {
+		t.Fatalf("applySQLiteMigrations() error = nil, want error")
+	}
+
+	want := "duplicate sqlite migration version: 1"
+	if err.Error() != want {
+		t.Fatalf("applySQLiteMigrations() error = %q, want %q", err.Error(), want)
+	}
+}
