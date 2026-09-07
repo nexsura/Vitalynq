@@ -139,3 +139,46 @@ func hasSQLiteMigrationVersion(db *sql.DB, version int) (bool, error) {
 
 	return exists, nil
 }
+
+func applySQLiteMigration(db *sql.DB, migration SQLiteMigration, appliedAt time.Time) error {
+	if migration.Version <= 0 {
+		return fmt.Errorf("sqlite migration version must be positive")
+	}
+
+	if migration.Apply == nil {
+		return fmt.Errorf("sqlite migration apply function is required")
+	}
+
+	if appliedAt.IsZero() {
+		return fmt.Errorf("sqlite migration applied date is required")
+	}
+
+	applied, err := hasSQLiteMigrationVersion(db, migration.Version)
+	if err != nil {
+		return err
+	}
+
+	if applied {
+		return nil
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		return fmt.Errorf("begin sqlite migration transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	if err := migration.Apply(tx); err != nil {
+		return fmt.Errorf("apply sqlite migration %d: %w", migration.Version, err)
+	}
+
+	if err := recordSQLiteMigrationVersion(tx, migration.Version, appliedAt); err != nil {
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("commit sqlite migration transaction: %w", err)
+	}
+
+	return nil
+}

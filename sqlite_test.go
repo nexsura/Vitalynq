@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"testing"
+	"time"
 )
 
 func TestOpenSQLite(t *testing.T) {
@@ -287,5 +288,146 @@ func TestHasSQLiteMigrationVersionReturnsTrueWhenPresent(t *testing.T) {
 
 	if !found {
 		t.Fatalf("found = false, want true")
+	}
+}
+
+func TestApplySQLiteMigrationAppliesMigration(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	called := false
+	migration := SQLiteMigration{
+		Version: 1,
+		Apply: func(tx *sql.Tx) error {
+			called = true
+			_, err := tx.Exec("CREATE TABLE migration_test (id INTEGER PRIMARY KEY)")
+			return err
+		},
+	}
+
+	if err := applySQLiteMigration(db, migration, testTime()); err != nil {
+		t.Fatalf("applySQLiteMigration() error = %v, want nil", err)
+	}
+
+	if !called {
+		t.Fatalf("called = false , want true")
+	}
+
+	found, err := hasSQLiteMigrationVersion(db, 1)
+	if err != nil {
+		t.Fatalf("hasSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if !found {
+		t.Fatalf("found = false, want true")
+	}
+}
+
+func TestApplySQLiteMigrationSkipsAppliedMigration(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		t.Fatalf("Begin() error = %v, want nil", err)
+	}
+
+	if err := recordSQLiteMigrationVersion(tx, 1, testTime()); err != nil {
+		t.Fatalf("recordSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		t.Fatalf("Commit() error = %v, want nil", err)
+	}
+
+	called := false
+	migration := SQLiteMigration{
+		Version: 1,
+		Apply: func(tx *sql.Tx) error {
+			called = true
+			return nil
+		},
+	}
+
+	if err := applySQLiteMigration(db, migration, testTime()); err != nil {
+		t.Fatalf("applySQLiteMigration() error = %v, want nil", err)
+	}
+
+	if called {
+		t.Fatalf("called = true, want false")
+	}
+}
+
+func TestApplySQLiteMigrationRejectsInvalidVersion(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	migration := SQLiteMigration{
+		Version: 0,
+		Apply: func(tx *sql.Tx) error {
+			return nil
+		},
+	}
+
+	if err := applySQLiteMigration(db, migration, testTime()); err == nil {
+		t.Fatalf("applySQLiteMigration() error = nil, want error")
+	}
+}
+
+func TestApplySQLiteMigrationRejectsMissingApplyFunction(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	migration := SQLiteMigration{
+		Version: 1,
+	}
+
+	if err := applySQLiteMigration(db, migration, testTime()); err == nil {
+		t.Fatalf("applySQLiteMigration() error = nil, want error")
+	}
+}
+
+func TestApplySQLiteMigrationRejectsMissingAppliedDate(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	migration := SQLiteMigration{
+		Version: 1,
+		Apply: func(tx *sql.Tx) error {
+			return nil
+		},
+	}
+
+	err = applySQLiteMigration(db, migration, time.Time{})
+	if err == nil {
+		t.Fatalf("applySQLiteMigration() error = nil, want error")
+	}
+
+	want := "sqlite migration applied date is required"
+	if err.Error() != want {
+		t.Fatalf("applySQLiteMigration() error = %q, want %q", err.Error(), want)
 	}
 }
