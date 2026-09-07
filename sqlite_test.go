@@ -569,3 +569,36 @@ func TestApplySQLiteMigrationsStopsAfterFailedMigration(t *testing.T) {
 		}
 	}
 }
+
+func TestApplySQLiteMigrationsDoesNotRecordFailedMigration(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	migration := SQLiteMigration{
+		Version: 1,
+		Apply: func(tx *sql.Tx) error {
+			return fmt.Errorf("fictive migration failure")
+		},
+	}
+
+	err = applySQLiteMigrations(db, []SQLiteMigration{migration}, testTime())
+	if err == nil {
+		t.Fatalf("applySQLiteMigrations() error = nil, want error")
+	}
+
+	applied, err := hasSQLiteMigrationVersion(db, 1)
+	if err != nil {
+		t.Fatalf("hasSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if applied {
+		t.Fatalf("applied = true, want false")
+	}
+}
