@@ -168,8 +168,17 @@ func TestRecordSQLiteMigrationVersion(t *testing.T) {
 		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
 	}
 
-	if err := recordSQLiteMigrationVersion(db, 1, testTime()); err != nil {
+	tx, err := db.Begin()
+	if err != nil {
+		t.Fatalf("Begin() error = %v, want nil", err)
+	}
+
+	if err := recordSQLiteMigrationVersion(tx, 1, testTime()); err != nil {
 		t.Fatalf("recordSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		t.Fatalf("Commit() error = %v, want nil", err)
 	}
 
 	versions, err := appliedSQLiteMigrationVersions(db)
@@ -258,8 +267,17 @@ func TestHasSQLiteMigrationVersionReturnsTrueWhenPresent(t *testing.T) {
 		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
 	}
 
-	if err := recordSQLiteMigrationVersion(db, 1, testTime()); err != nil {
+	tx, err := db.Begin()
+	if err != nil {
+		t.Fatalf("Begin() error = %v, want nil", err)
+	}
+
+	if err := recordSQLiteMigrationVersion(tx, 1, testTime()); err != nil {
 		t.Fatalf("recordSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		t.Fatalf("Commit() error = %v, want nil", err)
 	}
 
 	found, err := hasSQLiteMigrationVersion(db, 1)

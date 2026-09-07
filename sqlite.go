@@ -105,7 +105,7 @@ func appliedSQLiteMigrationVersions(db *sql.DB) ([]int, error) {
 	return versions, nil
 }
 
-func recordSQLiteMigrationVersion(db *sql.DB, version int, appliedAt time.Time) error {
+func recordSQLiteMigrationVersion(tx *sql.Tx, version int, appliedAt time.Time) error {
 	if version <= 0 {
 		return fmt.Errorf("sqlite migration version must be positive")
 	}
@@ -114,7 +114,7 @@ func recordSQLiteMigrationVersion(db *sql.DB, version int, appliedAt time.Time) 
 		return fmt.Errorf("sqlite migration applied date is required")
 	}
 
-	_, err := db.Exec(
+	_, err := tx.Exec(
 		"INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)",
 		version,
 		appliedAt.UTC().Format(time.RFC3339),
