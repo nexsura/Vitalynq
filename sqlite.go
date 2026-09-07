@@ -203,3 +203,7 @@ func applySQLiteMigrations(db *sql.DB, migrations []SQLiteMigration, appliedAt t
 
 	return nil
 }
+
+func sqliteMigrations() []SQLiteMigration {
+	return []SQLiteMigration{}
+}
