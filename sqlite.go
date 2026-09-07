@@ -125,3 +125,17 @@ func recordSQLiteMigrationVersion(db *sql.DB, version int, appliedAt time.Time) 
 
 	return nil
 }
+
+func hasSQLiteMigrationVersion(db *sql.DB, version int) (bool, error) {
+	var exists bool
+
+	err := db.QueryRow(
+		"SELECT EXISTS(SELECT 1 FROM schema_migrations WHERE version = ?)",
+		version,
+	).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("check sqlite migration version: %w", err)
+	}
+
+	return exists, nil
+}

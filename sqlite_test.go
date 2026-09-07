@@ -225,3 +225,49 @@ func TestSQLiteMigrationStoresVersionAndApplyFunction(t *testing.T) {
 		t.Fatalf("called = false, want true")
 	}
 }
+
+func TestHasSQLiteMigrationVersionReturnsFalseWhenMissing(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	found, err := hasSQLiteMigrationVersion(db, 1)
+	if err != nil {
+		t.Fatalf("hasSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if found {
+		t.Fatalf("found = true, want false")
+	}
+}
+
+func TestHasSQLiteMigrationVersionReturnsTrueWhenPresent(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if err := recordSQLiteMigrationVersion(db, 1, testTime()); err != nil {
+		t.Fatalf("recordSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	found, err := hasSQLiteMigrationVersion(db, 1)
+	if err != nil {
+		t.Fatalf("hasSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if !found {
+		t.Fatalf("found = false, want true")
+	}
+}
