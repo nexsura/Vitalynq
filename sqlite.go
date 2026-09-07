@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"sort"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -178,6 +179,26 @@ func applySQLiteMigration(db *sql.DB, migration SQLiteMigration, appliedAt time.
 
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("commit sqlite migration transaction: %w", err)
+	}
+
+	return nil
+}
+
+func applySQLiteMigrations(db *sql.DB, migrations []SQLiteMigration, appliedAt time.Time) error {
+	orderedMigrations := append([]SQLiteMigration(nil), migrations...)
+
+	sort.Slice(orderedMigrations, func(i, j int) bool {
+		return orderedMigrations[i].Version < orderedMigrations[j].Version
+	})
+
+	for index, migration := range orderedMigrations {
+		if index > 0 && migration.Version == orderedMigrations[index-1].Version {
+			return fmt.Errorf("duplicate sqlite migration version: %d", migration.Version)
+		}
+
+		if err := applySQLiteMigration(db, migration, appliedAt); err != nil {
+			return err
+		}
 	}
 
 	return nil
