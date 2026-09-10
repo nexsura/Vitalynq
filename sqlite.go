@@ -209,15 +209,15 @@ func sqliteMigrations() []SQLiteMigration {
 }
 
 func hasCurrentSQLiteSchema(db *sql.DB) (bool, error) {
-	expectedTables := []string{
-		"schema_migrations",
-		"observations",
-		"medical_profiles",
-		"measurements",
-		"appointments",
+	expectedTables := map[string][]string{
+		"schema_migrations": {"version", "applied_at"},
+		"observations":      {"id", "occurred_at", "created_at", "text", "source"},
+		"medical_profiles":  {"id", "created_at", "updated_at", "label"},
+		"measurements":      {"id", "occurred_at", "created_at", "indicator", "value", "unit", "context", "method", "source"},
+		"appointments":      {"id", "scheduled_at", "created_at", "title", "category", "location", "source"},
 	}
 
-	for _, tableName := range expectedTables {
+	for tableName, expectedColumns := range expectedTables {
 		var exists bool
 		err := db.QueryRow(
 			"SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?)",
@@ -229,8 +229,50 @@ func hasCurrentSQLiteSchema(db *sql.DB) (bool, error) {
 		if !exists {
 			return false, nil
 		}
+
+		hasColumns, err := hasSQLiteTableColumns(db, tableName, expectedColumns)
+		if err != nil {
+			return false, err
+		}
+		if !hasColumns {
+			return false, nil
+		}
 	}
 
+	return true, nil
+}
+
+func hasSQLiteTableColumns(db *sql.DB, tableName string, expectedColumns []string) (bool, error) {
+	rows, err := db.Query("SELECT name FROM pragma_table_info(?)", tableName)
+	if err != nil {
+		return false, fmt.Errorf("list sqlite table columns %s: %w", tableName, err)
+	}
+	defer rows.Close()
+
+	foundColumns := map[string]bool{}
+
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			return false, fmt.Errorf("scan sqlite table column %s: %w", tableName, err)
+		}
+
+		foundColumns[name] = true
+	}
+
+	if err := rows.Err(); err != nil {
+		return false, fmt.Errorf("iterate sqlite table columns %s: %w", tableName, err)
+	}
+
+	if len(foundColumns) != len(expectedColumns) {
+		return false, nil
+	}
+
+	for _, column := range expectedColumns {
+		if !foundColumns[column] {
+			return false, nil
+		}
+	}
 	return true, nil
 }
 

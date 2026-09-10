@@ -740,3 +740,90 @@ func TestMarkCurrentSQLiteSchemaBaselineRejectsMissingAppliedDate(t *testing.T) 
 		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = %q, want %q", err.Error(), want)
 	}
 }
+
+func TestHasCurrentSQLiteSchemaReturnsFalseForMissingColumn(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	statements := []string{
+		`CREATE TABLE schema_migrations (
+			version INTEGER PRIMARY KEY,
+			applied_at TEXT NOT NULL
+		);`,
+		`CREATE TABLE observations (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			occurred_at TEXT NOT NULL,
+			created_at TEXT NOT NULL,
+			text TEXT NOT NULL
+		);`,
+		`CREATE TABLE medical_profiles (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			created_at TEXT NOT NULL,
+			updated_at TEXT NOT NULL,
+			label TEXT NOT NULL
+		);`,
+		`CREATE TABLE measurements (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			occurred_at TEXT NOT NULL,
+			created_at TEXT NOT NULL,
+			indicator TEXT NOT NULL,
+			value REAL NOT NULL,
+			unit TEXT NOT NULL,
+			context TEXT NOT NULL,
+			method TEXT NOT NULL,
+			source TEXT NOT NULL
+		);`,
+		`CREATE TABLE appointments (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			scheduled_at TEXT NOT NULL,
+			created_at TEXT NOT NULL,
+			title TEXT NOT NULL,
+			category TEXT NOT NULL,
+			location TEXT NOT NULL,
+			source TEXT NOT NULL
+		);`,
+	}
+
+	for _, statement := range statements {
+		if _, err := db.Exec(statement); err != nil {
+			t.Fatalf("Exec() error = %v, want nil", err)
+		}
+	}
+
+	hasSchema, err := hasCurrentSQLiteSchema(db)
+	if err != nil {
+		t.Fatalf("hasCurrentSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if hasSchema {
+		t.Fatalf("hasSchema = true, want false")
+	}
+}
+
+func TestHasCurrentSQLiteSchemaReturnsFalseForUnexpectedColumn(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if _, err := db.Exec("ALTER TABLE observations ADD COLUMN extra TEXT"); err != nil {
+		t.Fatalf("Exec() error = %v, want nil", err)
+	}
+
+	hasSchema, err := hasCurrentSQLiteSchema(db)
+	if err != nil {
+		t.Fatalf("hasCurrentSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if hasSchema {
+		t.Fatalf("hasSchema = true, want false")
+	}
+}
