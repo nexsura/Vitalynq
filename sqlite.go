@@ -313,3 +313,7 @@ func markCurrentSQLiteSchemaBaseline(db *sql.DB, appliedAt time.Time) error {
 
 	return nil
 }
+
+func applyKnownSQLiteMigrations(db *sql.DB, appliedAt time.Time) error {
+	return applySQLiteMigrations(db, sqliteMigrations(), appliedAt)
+}

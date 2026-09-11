@@ -973,3 +973,19 @@ func TestApplySQLiteMigrationsDoesNotMutateInputSlice(t *testing.T) {
 		t.Fatalf("migration[1].Version = %d, want 1", migrations[1].Version)
 	}
 }
+
+func TestApplyKnownSQLiteMigrations(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if err := applyKnownSQLiteMigrations(db, testTime()); err != nil {
+		t.Fatalf("applyKnownSQLiteMigrations() error = %v, want nil", err)
+	}
+}
