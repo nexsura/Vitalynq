@@ -827,3 +827,38 @@ func TestHasCurrentSQLiteSchemaReturnsFalseForUnexpectedColumn(t *testing.T) {
 		t.Fatalf("hasSchema = true, want false")
 	}
 }
+
+func TestMarkCurrentSQLiteSchemaBaselineRejectsUnexpectedColumn(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	if _, err := db.Exec("ALTER TABLE observations ADD COLUMN extra TEXT"); err != nil {
+		t.Fatalf("Exec() error = %v, want nil", err)
+	}
+
+	err = markCurrentSQLiteSchemaBaseline(db, testTime())
+	if err == nil {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = nil, want error")
+	}
+
+	want := "sqlite schema does not match current baseline"
+	if err.Error() != want {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = %q, want %q", err.Error(), want)
+	}
+
+	applied, err := hasSQLiteMigrationVersion(db, 1)
+	if err != nil {
+		t.Fatalf("hasSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if applied {
+		t.Fatalf("applied = true, want false")
+	}
+}
