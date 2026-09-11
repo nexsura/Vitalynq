@@ -54,3 +54,9 @@ The existing SQLite schema created by `initializeSQLiteSchema` is considered the
 This baseline is not yet represented as an applied migration in existing databases. Defining this baseline does not modify any existing database and does not insert any row into `schema_migrations`.
 
 The project will define a separate baseline procedure before automatic migrations are enabled at startup.
+
+## Current Implementation Status
+
+Vitalynq now has a central SQLite migration registry and an explicit entrypoint for applying known migrations.
+
+Automatic migration execution is not enabled at application startup yet. The CLI still initializes the current schema directly while the baseline procedure is being finalized.
