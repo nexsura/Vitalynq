@@ -934,3 +934,42 @@ func TestMarkCurrentSQLiteSchemaBaselineRejectsMissingColumn(t *testing.T) {
 		t.Fatalf("applied = true, want false")
 	}
 }
+
+func TestApplySQLiteMigrationsDoesNotMutateInputSlice(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	if err := initializeSQLiteSchema(db); err != nil {
+		t.Fatalf("initializeSQLiteSchema() error = %v, want nil", err)
+	}
+
+	migrations := []SQLiteMigration{
+		{
+			Version: 2,
+			Apply: func(tx *sql.Tx) error {
+				return nil
+			},
+		},
+		{
+			Version: 1,
+			Apply: func(tx *sql.Tx) error {
+				return nil
+			},
+		},
+	}
+
+	if err := applySQLiteMigrations(db, migrations, testTime()); err != nil {
+		t.Fatalf("applySQLiteMigrations() error = %v, want nil", err)
+	}
+
+	if migrations[0].Version != 2 {
+		t.Fatalf("migrations[0].Version = %d, want 2", migrations[0].Version)
+	}
+
+	if migrations[1].Version != 1 {
+		t.Fatalf("migration[1].Version = %d, want 1", migrations[1].Version)
+	}
+}
