@@ -862,3 +862,75 @@ func TestMarkCurrentSQLiteSchemaBaselineRejectsUnexpectedColumn(t *testing.T) {
 		t.Fatalf("applied = true, want false")
 	}
 }
+
+func TestMarkCurrentSQLiteSchemaBaselineRejectsMissingColumn(t *testing.T) {
+	db, err := openSQLite(":memory:")
+	if err != nil {
+		t.Fatalf("openSQLite() error = %v, want nil", err)
+	}
+	defer db.Close()
+
+	statements := []string{
+		`CREATE TABLE schema_migrations (
+			version INTEGER PRIMARY KEY,
+			applied_at TEXT NOT NULL
+		);`,
+		`CREATE TABLE observations (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			occurred_at TEXT NOT NULL,
+			created_at TEXT NOT NULL,
+			text TEXT NOT NULL
+		);`,
+		`CREATE TABLE medical_profiles (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			created_at TEXT NOT NULL,
+			updated_at TEXT NOT NULL,
+			label TEXT NOT NULL
+		);`,
+		`CREATE TABLE measurements (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			occurred_at TEXT NOT NULL,
+			created_at TEXT NOT NULL,
+			indicator TEXT NOT NULL,
+			value REAL NOT NULL,
+			unit TEXT NOT NULL,
+			context TEXT NOT NULL,
+			method TEXT NOT NULL,
+			source TEXT NOT NULL
+		);`,
+		`CREATE TABLE appointments (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			scheduled_at TEXT NOT NULL,
+			created_at TEXT NOT NULL,
+			title TEXT NOT NULL,
+			category TEXT NOT NULL,
+			location TEXT NOT NULL,
+			source TEXT NOT NULL
+		);`,
+	}
+
+	for _, statement := range statements {
+		if _, err := db.Exec(statement); err != nil {
+			t.Fatalf("Exec() error = %v, want nil", err)
+		}
+	}
+
+	err = markCurrentSQLiteSchemaBaseline(db, testTime())
+	if err == nil {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = nil, want error")
+	}
+
+	want := "sqlite schema does not match current baseline"
+	if err.Error() != want {
+		t.Fatalf("markCurrentSQLiteSchemaBaseline() error = %q, want %q", err.Error(), want)
+	}
+
+	applied, err := hasSQLiteMigrationVersion(db, 1)
+	if err != nil {
+		t.Fatalf("hasSQLiteMigrationVersion() error = %v, want nil", err)
+	}
+
+	if applied {
+		t.Fatalf("applied = true, want false")
+	}
+}
